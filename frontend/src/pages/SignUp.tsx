@@ -20,6 +20,10 @@ const SignUp: React.FC = () => {
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
+    localStorage.setItem("name", formData.name);
+    localStorage.setItem("email", formData.email);
+    localStorage.setItem("mobile",formData.mobile);
+
     // if (formData.password !== formData.confirmPassword) {
     //   alert("Passwords do not match!");
     //   return;
@@ -40,8 +44,8 @@ const SignUp: React.FC = () => {
 
       const data = await response.json();
       console.log("User registered:", data);
-      alert("Registration successful!");
-      navigate("/home");
+      alert("Registration successful! Please login to continue.");
+      navigate("/login");
     } catch (error) {
       console.log("Error:", error);
       alert("Registration failed. Please try again.");
@@ -68,12 +72,13 @@ const SignUp: React.FC = () => {
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
               <label htmlFor="fullName" className="block text-sm font-medium text-gray-900">
-                Full Name
+                
               </label>
               <div className="mt-2">
                 <input
                   id="name"
                   name="name"
+                  placeholder="Full Name"
                   type="text"
                   value={formData.name}
                   onChange={handleChange}
@@ -86,12 +91,13 @@ const SignUp: React.FC = () => {
 
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-900">
-                Email address
+                
               </label>
               <div className="mt-2">
                 <input
                   id="email"
                   name="email"
+                  placeholder="Email address"
                   type="email"
                   value={formData.email}
                   onChange={handleChange}
@@ -104,12 +110,13 @@ const SignUp: React.FC = () => {
 
             <div>
               <label htmlFor="mobile" className="block text-sm font-medium text-gray-900">
-                Mobile Number
+                
               </label>
               <div className="mt-2">
                 <input
                   id="mobile"
                   name="mobile"
+                  placeholder="Mobile Number"
                   type="text"
                   value={formData.mobile}
                   onChange={handleChange}
@@ -121,12 +128,13 @@ const SignUp: React.FC = () => {
 
             <div>
               <label htmlFor="password" className="block text-sm font-medium text-gray-900">
-                Password
+                
               </label>
               <div className="mt-2">
                 <input
                   id="password"
                   name="password"
+                  placeholder="Password"
                   type="password"
                   value={formData.password}
                   onChange={handleChange}
@@ -135,10 +143,14 @@ const SignUp: React.FC = () => {
                   className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:outline-indigo-600 sm:text-sm"
                 />
               </div>
+
+              <div className="g-signin2" data-onsuccess="onSignIn"></div>
             </div>
 
 
             <div>
+
+            
               <button
                 type="submit"
                 className="flex w-full justify-center rounded-md bg-indigo-500 px-2 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-600 focus-visible:outline-2 focus-visible:outline-indigo-600"
