@@ -1,12 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import axios from "/Users/juntrax/Desktop/Chatapp/frontend/src/config/axiosConfig.ts";
 import "/Users/juntrax/Desktop/Chatapp/frontend/src/home.css";
 import User from "/Users/juntrax/Desktop/Chatapp/backend/src/models/User.ts";
-import OnlineUsers from "/Users/juntrax/Desktop/Chatapp/frontend/src/components/onlineUsers";
 import io from "socket.io-client";
-import { response } from "express";
-import router from "/Users/juntrax/Desktop/Chatapp/backend/src/routes/UserRequest";
 import ChatBox from "../components/ChatBox";
 import { IUser } from "/Users/juntrax/Desktop/Chatapp/backend/src/models/User.ts";
 
@@ -25,14 +22,11 @@ type User = {
   password?: string;
   mobile?: string;
   _id?: string;
-
-  
 };
-
 
 const Home: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([]);
-  const [onlineUsers, setOnlineUsers] = useState<User[]>([]);
+  const [onlineUsers, setOnlineUsers] = useState<IUser[]>([]);
   const [currentMessage, setCurrentMessage] = useState<string>("");
   const [isTyping, setIsTyping] = useState<boolean>(false);
   const [loggedInUser, setLoggedInUser] = useState<IUser | null>(null);
@@ -55,7 +49,7 @@ const Home: React.FC = () => {
     console.log("Connected to WebSocket server");
   });
 
-  // socket.emit("send_messsage",messages);
+  socket.emit("send_messsage", messages);
 
   const Chat = ({ loggedInUser }: { loggedInUser: User }) => {
     const [messages, setMessages] = useState<Message[]>([]);
@@ -108,18 +102,8 @@ const Home: React.FC = () => {
   };
 
   useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const token = localStorage.getItem("jwtToken");
-        const response = await axios.get("http://localhost:3000/auth/user", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        setUsers(response.data);
-      } catch (error) {
-        console.log("error fetching user", error);
-      }
-    };
-    fetchUserData();
+    const user = localStorage.getItem("user") || "";
+    setUsers(JSON.parse(user));
   }, []);
 
   useEffect(() => {
@@ -131,20 +115,12 @@ const Home: React.FC = () => {
           return;
         }
 
-        const response = await fetch("http://localhost:3000/auth/online", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`, // Send token in Authorization header
-          },
-        });
+        const response = await axios.get("http://localhost:3000/action/online");
 
-        if (!response.ok) {
-          throw new Error("Failed to fetch online users");
-        }
+        const data = response.data;
 
-        const data = await response.json();
         setOnlineUsers(data.onlineUsers || []);
+
         console.log("Online Users:", data.onlineUsers);
       } catch (error) {
         console.error("Error fetching online users:", error);
@@ -152,47 +128,16 @@ const Home: React.FC = () => {
     };
 
     fetchOnlineUsers();
-  }, []);
 
-  useEffect(() => {
-    axios.get("/api/auth/login").then((response) => {
-      setLoggedInUser(response.data);
+    socket.on("updateOnlineUsers", (user: IUser[]) => {
+      setOnlineUsers(user);
+      console.log("Received Updated Online Users:", user);
     });
 
-    const validateToken = async () => {
-      const token = localStorage.getItem("jwtToken");
-
-      if (!token) {
-        navigate("/login");
-        return;
-      }
-      try {
-        const response = await fetch("http://localhost:3000/auth/validate", {
-          headers: {
-            Authorization: token,
-          },
-        });
-
-        if (!response.ok) {
-          throw new Error("Invalid token 1");
-        }
-
-        const data = await response.json();
-
-        if (!data.valid) {
-          throw new Error("Invalid token 2");
-        }
-
-        console.log("User authenticated:", data.user);
-      } catch (error) {
-        console.error(error);
-        localStorage.removeItem("jwtToken");
-        navigate("/login");
-      }
+    return () => {
+      socket.off("updateOnlineUsers");
     };
-
-    validateToken();
-  }, [navigate]);
+  }, []);
 
   const handleLogout = () => {
     localStorage.removeItem("jwtToken");
@@ -205,41 +150,13 @@ const Home: React.FC = () => {
     socket.disconnect();
   };
 
-  const handleToggleChat = () => {
-    setIsChatVisible((prev) => !prev);
-  };
-
   const handleHome = () => {
     console.log("Home clicked");
     navigate("/home");
   };
 
-  const handleSelectedUser = () => {
-    setSelectedUser(users);
-    
-  };
-
-  const handleSendMessage = async () => {
-    if ((currentMessage.trim() || selectedMedia) && users?.name) {
-      const message: Message = {
-        sender: users?.name || "Unknown",
-        content: currentMessage,
-        timestamp: new Date().toLocaleTimeString([], {
-          hour: "2-digit",
-          minute: "2-digit",
-        }),
-        media: selectedMedia ? URL.createObjectURL(selectedMedia) : undefined,
-        id: Date.now(),
-      };
-
-      // Send message to backend via WebSocket
-      socket.emit("send_message", message);
-
-      // Clear input fields
-      setCurrentMessage("");
-      setSelectedMedia(null);
-      setIsTyping(false);
-    }
+  const handleSelectedUser = (user: IUser) => {
+    setSelectedUser(user);
   };
 
   // Ensure messages are received once, outside the function
@@ -283,10 +200,6 @@ const Home: React.FC = () => {
     navigate("/request");
   };
 
-  const handleRequestChatButton = () =>{
-
-  }
-
   return (
     <div className="home-container">
       {/* Main Content */}
@@ -304,6 +217,7 @@ const Home: React.FC = () => {
             </svg>
           </b>
         </button>
+
         <h1 className="title">Welcome to V-ChatApp!</h1>
 
         <h2>
@@ -319,14 +233,10 @@ const Home: React.FC = () => {
           <li>📷 Share images and media files effortlessly</li>
           <li>🔒 Secure and private messaging</li>
         </ul>
-        <p>
-          Click the <strong>Show Chat</strong> button below to start a
-          conversation and connect with your friends.
-        </p>
 
         {users?.name && (
           <p className="welcome-message">
-            Hi {users?.name} <span className="user-name"></span>! Ready to chat?
+            Hi {users.name} <span className="user-name"></span>! Ready to chat?
           </p>
         )}
 
@@ -359,127 +269,47 @@ const Home: React.FC = () => {
           </div>
         )}
 
-        {/* <button
-          onClick={handleToggleChat}
-          className="chat-toggle-button"
-          title="click to open chat box"
-        >
-          {isChatVisible ? "Hide Chat" : "Show Chat"}
-        </button> */}
-
         <div className="online-users">
-                  {users?.name && (
-                    <b>
-                      <p>Welcome {users.name}!</p>
-                    </b>
-                  )}
-                  <h3>Our Users:</h3>
-                  {Array.isArray(onlineUsers) && onlineUsers.length > 0 ? (
-                    <ul>
-                      {onlineUsers.map((user, index) => (
-                        <li key={user.id || index}>
-                          {" "}
-                          {/* Fallback key to prevent duplicate key warnings */}
-                          {user.name ? user.name : "Unknown User"}
-                          <button
-                            className="request-chat-button"
-                            title="click for start chatting"
-                           onClick={handleSelectedUser}
-                           
-                          >
-                            Chat
-                          </button>
-                        </li>
-                      ))}
-                    </ul>
-                  ) : (
-                    <p>No users online</p>
-                  )}
-
-                  </div>
-
-                  {selectedUser && (
-                <ChatBox
-                  selectedUser={selectedUser}
-                  loggedInUser={loggedInUser}
-                  socket={socket}
-                />
-              )}
-              </div>
-
-        {/* {isChatVisible && (
-          <div className="chat-box">
-            <h2 className="section-title">Chat </h2>
-
-            <div className="messages-box">
-              <div>
-                
-                </div> */}
-            
-
-              
-
-              {/* {messages.length > 0 ? (
-                messages.map((msg, index) => (
-                  <div
-                    key={index}
-                    className={`message ${
-                      msg.sender === users?.name
-                        ? "my-message"
-                        : "other-message"
-                    }`}
+          {users?.name && (
+            <b>
+              <p>Welcome {users?.name}!</p>
+            </b>
+          )}
+          <h3>Our Users:</h3>
+          {Array.isArray(onlineUsers) && onlineUsers.length > 0 ? (
+            <ul>
+              {onlineUsers.map((user, index) => (
+                <li key={user.id || index}>
+                  {" "}
+                  {/* Fallback key to prevent duplicate key warnings */}
+                  {user.name ? user.name : "Unknown User"}
+                  <button
+                    className="request-chat-button"
+                    title="click for start chatting"
+                    onClick={() => {
+                      handleSelectedUser(onlineUsers[index]);
+                    }}
                   >
-                    <div className="message-header">
-                      <strong>{msg.sender}:</strong> {msg.content}
-                      <span className="timestamp">{msg.timestamp}</span>
-                    </div>
-                    
-                  </div>
-                ))
-              ) : (
-                <p>No messages yet.</p>
-              )}
-            </div>
+                    Chat
+                  </button>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p>No users online</p>
+          )}
+        </div>
 
-            {isTyping && <p className="typing-indicator">You are typing...</p>} */}
-
-            {/* <div className="input-buttons">
-              <input
-                type="text"
-                value={currentMessage}
-                onChange={handleTyping}
-                placeholder="Type a message..."
-                className="message-input"
-              />
-
-              <button onClick={handleSendMessage} className="send-button">
-                Send
-              </button>
-              <button onClick={clearChat} className="clear-button">
-                Clear
-              </button>
-              
-            </div> */}
-
-            {/* Media Preview */}
-            {/* {selectedMedia && (
-              <div className="media-preview">
-                <p>Selected Media:</p>
-                <img
-                  src={URL.createObjectURL(selectedMedia)}
-                  alt="Preview"
-                  className="preview-image"
-                />
-              </div>
-            )} */}
-          </div>
-        
-      // </div>
-      //   </div>
-        
-     
-    
+        {selectedUser && (
+          <ChatBox
+            selectedUser={selectedUser}
+            loggedInUser={loggedInUser}
+            socket={socket}
+          />
+        )}
+      </div>
+    </div>
   );
-}
+};
 
 export default Home;
