@@ -13,8 +13,8 @@ import ensureAuthenticated from "/Users/juntrax/Desktop/Chatapp/backend/src/rout
 const router = express.Router();
 
 router.get("/me", getMe);
-router.get("/online", ensureAuthenticated, onlineUsers);
-router.get("/message", getMessages);
+router.get("/online", onlineUsers);
+router.get("/:senderId/:receiverId", getMessages);
 
 router.get("/allUser", getUsers);
 

@@ -1,14 +1,12 @@
 import mongoose, { Document, Schema, Model } from "mongoose";
 
-
 export interface IMessage extends Document {
   senderId: mongoose.Types.ObjectId;
   receiverId: mongoose.Types.ObjectId;
   message: string;
-  createdAt?: Date; 
-  updatedAt?: Date; 
+  createdAt?: Date;
+  updatedAt?: Date;
 }
-
 
 const messageSchema = new Schema<IMessage>(
   {
@@ -30,6 +28,9 @@ const messageSchema = new Schema<IMessage>(
   { timestamps: true }
 );
 
-const Message: Model<IMessage> = mongoose.model<IMessage>("Message", messageSchema);
+const Message: Model<IMessage> = mongoose.model<IMessage>(
+  "Message",
+  messageSchema
+);
 
 export default Message;

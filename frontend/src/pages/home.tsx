@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "/Users/juntrax/Desktop/Chatapp/frontend/src/config/axiosConfig.ts";
+import manualAxios from "/Users/juntrax/Desktop/Chatapp/frontend/src/config/axiosConfig.ts";
 import "/Users/juntrax/Desktop/Chatapp/frontend/src/home.css";
 import User from "/Users/juntrax/Desktop/Chatapp/backend/src/models/User.ts";
 import io from "socket.io-client";
@@ -51,7 +51,7 @@ const Home: React.FC = () => {
 
   socket.emit("send_messsage", messages);
 
-  const Chat = ({ loggedInUser }: { loggedInUser: User }) => {
+  const Chat = ({ loggedInUser }: { loggedInUser: IUser }) => {
     const [messages, setMessages] = useState<Message[]>([]);
     const [currentMessage, setCurrentMessage] = useState<string>("");
 
@@ -103,8 +103,22 @@ const Home: React.FC = () => {
 
   useEffect(() => {
     const user = localStorage.getItem("user") || "";
-    setUsers(JSON.parse(user));
+
+    if (user) {
+      try {
+        setLoggedInUser(JSON.parse(user));
+      } catch (error) {
+        console.error("Error parsing stored user:", error);
+        setLoggedInUser(null);
+      }
+    } else {
+      setLoggedInUser(null);
+    }
   }, []);
+
+  useEffect(() => {
+    console.log("loggedIn User: ", loggedInUser);
+  }, [loggedInUser]);
 
   useEffect(() => {
     const fetchOnlineUsers = async () => {
@@ -115,13 +129,17 @@ const Home: React.FC = () => {
           return;
         }
 
-        const response = await axios.get("http://localhost:3000/action/online");
+        const response = await manualAxios.get("action/online");
 
         const data = response.data;
 
-        setOnlineUsers(data.onlineUsers || []);
+        const filteredUsers = data.onlineUsers.filter(
+          (user: IUser) => user._id !== loggedInUser?._id
+        );
 
-        console.log("Online Users:", data.onlineUsers);
+        setOnlineUsers(filteredUsers);
+
+        console.log("Online Users:", filteredUsers);
       } catch (error) {
         console.error("Error fetching online users:", error);
       }
@@ -129,21 +147,25 @@ const Home: React.FC = () => {
 
     fetchOnlineUsers();
 
-    socket.on("updateOnlineUsers", (user: IUser[]) => {
-      setOnlineUsers(user);
-      console.log("Received Updated Online Users:", user);
+    socket.on("updateOnlineUsers", (users: IUser[]) => {
+      const filteredUsers = users.filter(
+        (user) => user._id !== loggedInUser?._id
+      );
+      setOnlineUsers(filteredUsers);
+      console.log("Updated Online Users :", filteredUsers);
     });
 
     return () => {
       socket.off("updateOnlineUsers");
     };
-  }, []);
+  }, [loggedInUser]);
 
   const handleLogout = () => {
     localStorage.removeItem("jwtToken");
     localStorage.removeItem("name");
     localStorage.removeItem("email");
     localStorage.removeItem("mobile");
+    localStorage.removeItem("user");
     alert("Logout successful!");
     navigate("/Login");
 
@@ -169,21 +191,6 @@ const Home: React.FC = () => {
       socket.off("receive_message"); // Cleanup listener on unmount
     };
   }, []);
-
-  const handleMediaChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      setSelectedMedia(e.target.files[0]);
-    }
-  };
-
-  const handleTyping = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setCurrentMessage(e.target.value);
-    setIsTyping(e.target.value.trim() !== "");
-  };
-
-  const clearChat = () => {
-    setMessages([]);
-  };
 
   const handleMenu = () => {
     console.log("Menu clicked");
@@ -234,9 +241,10 @@ const Home: React.FC = () => {
           <li>🔒 Secure and private messaging</li>
         </ul>
 
-        {users?.name && (
+        {loggedInUser && (
           <p className="welcome-message">
-            Hi {users.name} <span className="user-name"></span>! Ready to chat?
+            Hi {loggedInUser?.name} <span className="user-name"></span>! Ready
+            to chat?
           </p>
         )}
 
@@ -258,9 +266,7 @@ const Home: React.FC = () => {
               <li className="sidebar-item" onClick={handleProfile}>
                 Profile
               </li>
-              <li className="sidebar-item" onClick={handleRequest}>
-                Request
-              </li>
+
               <li className="sidebar-item">Settings</li>
               <li className="sidebar-item" onClick={handleLogout}>
                 Logout
@@ -270,9 +276,9 @@ const Home: React.FC = () => {
         )}
 
         <div className="online-users">
-          {users?.name && (
+          {loggedInUser && (
             <b>
-              <p>Welcome {users?.name}!</p>
+              <p>Welcome {loggedInUser?.name}!</p>
             </b>
           )}
           <h3>Our Users:</h3>

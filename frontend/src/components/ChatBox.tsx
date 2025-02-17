@@ -5,6 +5,8 @@ import User, {
 } from "/Users/juntrax/Desktop/Chatapp/backend/src/models/User.ts";
 
 import { Socket } from "socket.io-client";
+import axios from "axios";
+import { response } from "express";
 
 type ChatBoxProps = {
   selectedUser: IUser;
@@ -14,9 +16,9 @@ type ChatBoxProps = {
 
 type Message = {
   id: number;
-  sender: string;
-  receiver: any;
-  content: string;
+  senderId: string;
+  receiverId: any;
+  message: string;
   timestamp: string;
 };
 
@@ -26,21 +28,20 @@ const ChatBox: React.FC<ChatBoxProps> = ({ selectedUser, loggedInUser }) => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [currentMessage, setCurrentMessage] = useState<string>("");
   const [isTyping, setIsTyping] = useState<boolean>(false);
+  const [savedMessage, setSavedMessage] = useState<Message[]>([]);
   //  const [users, setUsers] = useState<IUser | null>(null);
-
-  useEffect(() => {
-    console.log("inchtbox", loggedInUser);
-  }, [loggedInUser]);
 
   useEffect(() => {
     socket.on("receive_message", (msg: Message) => {
       console.log("mesagesbdad", msg);
-      if (
-        msg.sender === selectedUser._id ||
-        msg.receiver === loggedInUser?._id
-      ) {
-        setMessages((prev) => [...prev, msg]);
-      }
+      // if (
+      //   msg.sender === selectedUser._id ||
+      //   msg.receiver === loggedInUser?._id
+      // ) {
+      //   setMessages((prev) => [...prev, msg]);
+      // }
+
+      setMessages((prev) => [...prev, msg]);
     });
 
     return () => {
@@ -49,13 +50,20 @@ const ChatBox: React.FC<ChatBoxProps> = ({ selectedUser, loggedInUser }) => {
   }, []);
 
   const handleSendMessage = async () => {
-    console.log(currentMessage, selectedUser.name);
+    const response = await fetch("http://localhost:3000/action/messages", {
+      method: "GET",
+      credentials: "include",
+    });
+
+    const data = response.json();
+
+    console.log("Message", data);
 
     if (currentMessage.trim() && selectedUser.name) {
       const message: Message = {
-        sender: loggedInUser?.name || "Unknown",
-        receiver: selectedUser._id,
-        content: currentMessage,
+        senderId: (loggedInUser?._id as string) || "Unknown",
+        receiverId: selectedUser._id,
+        message: currentMessage,
         timestamp: new Date().toLocaleTimeString([], {
           hour: "2-digit",
           minute: "2-digit",
@@ -95,11 +103,18 @@ const ChatBox: React.FC<ChatBoxProps> = ({ selectedUser, loggedInUser }) => {
           <div
             key={index}
             className={`message ${
-              msg.sender === loggedInUser?.name ? "my-message" : "other-message"
+              msg.senderId === loggedInUser?._id
+                ? "my-message"
+                : "other-message"
             }`}
           >
-            <strong>{msg.sender}:</strong> {msg.content}{" "}
-            <span className="timestamp">{msg.timestamp}</span>
+            <strong>
+              {msg.senderId === loggedInUser?._id
+                ? loggedInUser.name
+                : selectedUser.name}
+              :
+            </strong>{" "}
+            {msg.message} <span className="timestamp">{msg.timestamp}</span>
           </div>
         ))}
       </div>

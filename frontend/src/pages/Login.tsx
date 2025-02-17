@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "/Users/juntrax/Desktop/Chatapp/frontend/src/config/axiosConfig.ts";
-import GoogleLoginButton from "../components/GoogleLoginButton";
 import io from "socket.io-client";
 
 const Login: React.FC = () => {
@@ -45,10 +44,9 @@ const Login: React.FC = () => {
       if (response.data.data.token) {
         const data = response.data.data;
         localStorage.setItem("jwtToken", data.token);
-        localStorage.setItem("user", JSON.stringify(data.user));
-        localStorage.setItem("email", data.user.email);
-        localStorage.setItem("name", data.user.name);
-        // localStorage.setItem("mobile",data.user.mobile);
+        localStorage.setItem("user", JSON.stringify(data.updatedUser));
+
+        // localStorage.setItem("mobile", data.user.mobile);
 
         console.log("Login successful:", data);
         navigate("/home");

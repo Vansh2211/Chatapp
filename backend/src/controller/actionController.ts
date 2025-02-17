@@ -57,9 +57,7 @@ export const onlineUsers = async (
   console.log("decoded", user);
   try {
     // Fetch user details for all online users
-    const users = await User.find({
-      _id: { $in: Array.from(onlineUsersSet) },
-    }).select("name email mobile");
+    const users = await User.find({ online: true }).select("name email mobile");
 
     res
       .status(200)
@@ -74,7 +72,7 @@ export const getMessages = async (
   res: Response
 ): Promise<void> => {
   try {
-    const { senderId, receiverId } = req.params;
+    const { senderId, receiverId } = req.body;
 
     if (!senderId || !receiverId) {
       res.status(400).json({ message: "Sender and receiver IDs are required" });
@@ -83,10 +81,10 @@ export const getMessages = async (
 
     const messages = await Message.find({
       $or: [
-        { sender: senderId, receiver: receiverId },
-        { sender: receiverId, receiver: senderId },
+        { senderId: senderId, receiverId: receiverId },
+        { senderId: receiverId, receiverId: senderId },
       ],
-    }).sort({ createdAt: 1 }); // Sort messages from oldest to newest
+    }).sort({ createdAt: 1 });
 
     res.status(200).json({ messages });
   } catch (error) {

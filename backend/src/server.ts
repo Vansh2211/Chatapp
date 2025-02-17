@@ -13,7 +13,9 @@ import requestRoutes from "./controller/userRequestController";
 import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
 import Message from "./models/message";
+import { IMessage } from "./models/message";
 import ensureAuthenticated from "./routes/authEnsure";
+require("dotenv").config();
 
 dotenv.config();
 
@@ -34,7 +36,7 @@ app.use(express.json());
 
 app.use("/auth", authRoutes);
 app.use("/requests", ensureAuthenticated, requestRoutes);
-app.use("/action", ensureAuthenticated, actionRoutes);
+app.use("/action", actionRoutes);
 
 app.use(
   (
@@ -67,9 +69,31 @@ io.on("connection", (socket) => {
   console.log("New client connected:", socket.id);
 
   socket.on("send_message", async (message) => {
-    console.log("Message received:", message);
+    try {
+      console.log("Message received:", message);
 
-    io.emit("receive_message", message);
+      if (!message.senderId || !message.receiverId || !message.content) {
+        console.log("Kuch ids missing hai bhai", {
+          senderId: message.senderId,
+          receiverId: message.receiverId,
+          message: message.message,
+        });
+      }
+
+      const newMessage = new Message({
+        senderId: message.senderId,
+        receiverId: message.receiverId,
+        message: message.content,
+      });
+
+      await newMessage.save();
+
+      io.emit("receive_message", newMessage);
+    } catch (error) {
+      console.error(error);
+    }
+
+    // io.emit("receive_message", message);
   });
 
   socket.on("join_room", (room) => {

@@ -64,9 +64,7 @@ const Profile = () => {
             <li className="sidebar-item" onClick={handleProfile}>
               Profile
             </li>
-            <li className="sidebar-item" onClick={handleRequest}>
-              Requests
-            </li>
+
             <li className="sidebar-item">Settings</li>
             <li className="sidebar-item" onClick={handlePLogout}>
               Logout

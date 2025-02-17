@@ -1,4 +1,5 @@
 require("dotenv").config();
+import { configDotenv } from "dotenv";
 import { Request, Response, NextFunction } from "express";
 
 import jwt, { JwtPayload } from "jsonwebtoken";
@@ -13,6 +14,7 @@ const ensureAuthenticated = (
   next: NextFunction
 ): void => {
   const token = req.headers["authorization"]?.split(" ")[1];
+  console.log("token: ", token);
 
   if (!token) {
     res.status(403).json({ message: "Unauthorized JWT" });
