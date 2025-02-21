@@ -33,21 +33,20 @@ const ChatBox: React.FC<ChatBoxProps> = ({ selectedUser, loggedInUser }) => {
 
   useEffect(() => {
     socket.on("receive_message", (msg: Message) => {
-      console.log("mesagesbdad", msg);
-      // if (
-      //   msg.sender === selectedUser._id ||
-      //   msg.receiver === loggedInUser?._id
-      // ) {
-      //   setMessages((prev) => [...prev, msg]);
-      // }
-
-      setMessages((prev) => [...prev, msg]);
+      if (
+        (msg.senderId === loggedInUser?._id &&
+          msg.receiverId === selectedUser._id) ||
+        (msg.senderId === selectedUser._id &&
+          msg.receiverId === loggedInUser?._id)
+      ) {
+        setMessages((prevMessages) => [...prevMessages, msg]);
+      }
     });
 
     return () => {
       socket.off("receive_message");
     };
-  }, []);
+  }, [selectedUser._id, loggedInUser?._id]);
 
   const handleSendMessage = async () => {
     const response = await fetch("http://localhost:3000/action/messages", {

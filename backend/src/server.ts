@@ -72,7 +72,7 @@ io.on("connection", (socket) => {
     try {
       console.log("Message received:", message);
 
-      if (!message.senderId || !message.receiverId || !message.content) {
+      if (!message.senderId || !message.receiverId || !message.message) {
         console.log("Kuch ids missing hai bhai", {
           senderId: message.senderId,
           receiverId: message.receiverId,
@@ -83,7 +83,7 @@ io.on("connection", (socket) => {
       const newMessage = new Message({
         senderId: message.senderId,
         receiverId: message.receiverId,
-        message: message.content,
+        message: message.message,
       });
 
       await newMessage.save();
