@@ -1,6 +1,4 @@
 import express from "express";
-import session from "express-session";
-import passport from "passport";
 import dotenv from "dotenv";
 import cors from "cors";
 import http from "http";
@@ -8,13 +6,11 @@ import { Server } from "socket.io";
 import connectDB from "./config/db";
 import authRoutes from "./routes/auth";
 import actionRoutes from "/Users/juntrax/Desktop/Chatapp/backend/src/routes/actionRoutes";
-import { Request } from "express";
 import requestRoutes from "./controller/userRequestController";
-import jwt from "jsonwebtoken";
-import mongoose from "mongoose";
 import Message from "./models/message";
-import { IMessage } from "./models/message";
-import ensureAuthenticated from "./routes/authEnsure";
+import { Conversation } from "/Users/juntrax/Desktop/Chatapp/backend/src/models/conversation";
+import ensureAuthenticated from "/Users/juntrax/Desktop/Chatapp/backend/src/routes/authEnsure";
+
 require("dotenv").config();
 
 dotenv.config();
@@ -80,7 +76,26 @@ io.on("connection", (socket) => {
         });
       }
 
+      let conversation = await Conversation.findOne({
+        participants: { $all: [message.senderId, message.receiverId] },
+      });
+
+      if (!conversation) {
+        conversation = new Conversation({
+          participants: [message.senderId, message.receiverId],
+        });
+        await conversation.save();
+      }
+
+      console.log("Conversation found or created:", conversation);
+
+      if (!conversation._id) {
+        console.error("Error: Conversation ID is missing!");
+        return;
+      }
+
       const newMessage = new Message({
+        conversationId: conversation._id,
         senderId: message.senderId,
         receiverId: message.receiverId,
         message: message.message,

@@ -5,6 +5,7 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import User, { IUser } from "../models/User";
 import Message from "/Users/juntrax/Desktop/Chatapp/backend/src/models/message";
+import { Conversation } from "/Users/juntrax/Desktop/Chatapp/backend/src/models/conversation";
 
 //getMe
 export const getMe = async (req: Request, res: Response): Promise<void> => {
@@ -79,11 +80,17 @@ export const getMessages = async (
       return;
     }
 
+    const conversation = await Conversation.findOne({
+      participants: { $all: [senderId, receiverId] },
+    });
+
+    if (!conversation) {
+      res.status(200).json({ messages: [] }); // No messages yet
+      return;
+    }
+
     const messages = await Message.find({
-      $or: [
-        { senderId: senderId, receiverId: receiverId },
-        { senderId: receiverId, receiverId: senderId },
-      ],
+      conversationId: conversation._id,
     }).sort({ createdAt: 1 });
 
     res.status(200).json({ messages });

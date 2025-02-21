@@ -49,7 +49,7 @@ const Login: React.FC = () => {
         // localStorage.setItem("mobile", data.user.mobile);
 
         console.log("Login successful:", data);
-        navigate("/home");
+        navigate("/main");
       } else {
         setError(response.data.message || "Login failed. Please try again.");
       }

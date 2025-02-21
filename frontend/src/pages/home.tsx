@@ -174,7 +174,7 @@ const Home: React.FC = () => {
 
   const handleHome = () => {
     console.log("Home clicked");
-    navigate("/home");
+    navigate("/main");
   };
 
   const handleSelectedUser = (user: IUser) => {
@@ -225,22 +225,6 @@ const Home: React.FC = () => {
           </b>
         </button>
 
-        <h1 className="title">Welcome to V-ChatApp!</h1>
-
-        <h2>
-          Your ultimate platform for real-time conversations and media sharing.
-        </h2>
-
-        <p>
-          V-ChatApp is designed to bring people closer with instant messaging,
-          seamless media sharing, and an intuitive user experience.
-        </p>
-        <ul>
-          <li>🌟 Real-time chat with friends and colleagues</li>
-          <li>📷 Share images and media files effortlessly</li>
-          <li>🔒 Secure and private messaging</li>
-        </ul>
-
         {loggedInUser && (
           <p className="welcome-message">
             Hi {loggedInUser?.name} <span className="user-name"></span>! Ready
@@ -275,44 +259,47 @@ const Home: React.FC = () => {
           </div>
         )}
 
-        <div className="online-users">
-          {loggedInUser && (
-            <b>
-              <p>Welcome {loggedInUser?.name}!</p>
-            </b>
-          )}
-          <h3>Our Users:</h3>
-          {Array.isArray(onlineUsers) && onlineUsers.length > 0 ? (
-            <ul>
-              {onlineUsers.map((user, index) => (
-                <li key={user.id || index}>
-                  {" "}
-                  {/* Fallback key to prevent duplicate key warnings */}
-                  {user.name ? user.name : "Unknown User"}
-                  <button
-                    className="request-chat-button"
-                    title="click for start chatting"
-                    onClick={() => {
-                      handleSelectedUser(onlineUsers[index]);
-                    }}
-                  >
-                    Chat
-                  </button>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p>No users online</p>
+        <div className="chat-container">
+          <div className="online-users">
+            {loggedInUser && (
+              <b>
+                <p>Welcome {loggedInUser?.name}!</p>
+              </b>
+            )}
+            <h3>Our Users:</h3>
+            {Array.isArray(onlineUsers) && onlineUsers.length > 0 ? (
+              <ul className="user-list">
+                {onlineUsers.map((user, index) => (
+                  <li key={user.id || index} className="user-item">
+                    <div className="user-avatar">👤</div>
+                    <div className="user-info"></div>{" "}
+                    {/* Fallback key to prevent duplicate key warnings */}
+                    {user.name ? user.name : "Unknown User"}
+                    <button
+                      className="request-chat-button"
+                      title="click for start chatting"
+                      onClick={() => {
+                        handleSelectedUser(onlineUsers[index]);
+                      }}
+                    >
+                      Chat
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p>No users online</p>
+            )}
+          </div>
+
+          {selectedUser && (
+            <ChatBox
+              selectedUser={selectedUser}
+              loggedInUser={loggedInUser}
+              socket={socket}
+            />
           )}
         </div>
-
-        {selectedUser && (
-          <ChatBox
-            selectedUser={selectedUser}
-            loggedInUser={loggedInUser}
-            socket={socket}
-          />
-        )}
       </div>
     </div>
   );
