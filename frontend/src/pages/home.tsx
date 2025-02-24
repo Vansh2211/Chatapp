@@ -27,13 +27,8 @@ type User = {
 const Home: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [onlineUsers, setOnlineUsers] = useState<IUser[]>([]);
-  const [currentMessage, setCurrentMessage] = useState<string>("");
-  const [isTyping, setIsTyping] = useState<boolean>(false);
   const [loggedInUser, setLoggedInUser] = useState<IUser | null>(null);
-  const [selectedMedia, setSelectedMedia] = useState<File | null>(null);
-  const [isChatVisible, setIsChatVisible] = useState<boolean>(false);
   const [isMenuVisible, setIsMenuVisible] = useState<boolean>(false);
-  const [isProfileVisible, setIsProfileVisible] = useState<boolean>(false);
   const [users, setUsers] = useState<IUser | null>(null);
   const [selectedUser, setSelectedUser] = useState<IUser | null>(null);
 
@@ -53,7 +48,6 @@ const Home: React.FC = () => {
 
   const Chat = ({ loggedInUser }: { loggedInUser: IUser }) => {
     const [messages, setMessages] = useState<Message[]>([]);
-    const [currentMessage, setCurrentMessage] = useState<string>("");
 
     useEffect(() => {
       socket.on("send_message", (msg: Message) => {
@@ -202,11 +196,6 @@ const Home: React.FC = () => {
     navigate("/profile");
   };
 
-  const handleRequest = () => {
-    console.log("Request clicked");
-    navigate("/request");
-  };
-
   return (
     <div className="home-container">
       {/* Main Content */}
@@ -224,6 +213,7 @@ const Home: React.FC = () => {
             </svg>
           </b>
         </button>
+        <h1>V-ChatApp</h1>
 
         {loggedInUser && (
           <p className="welcome-message">

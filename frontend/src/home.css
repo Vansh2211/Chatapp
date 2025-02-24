@@ -122,6 +122,7 @@
 /* Main Content */
 .main-content {
   flex: 1; /* Allow main content to grow to fill available space */
+  flex-grow: 1;
   padding: 30px;
   width: 300%;
   display: flex;
@@ -145,25 +146,48 @@
 
 /* Chat Box */
 .chat-box {
-  flex: 1; /* Takes the remaining space */
+  flex-grow: 1;
+  flex: 1;
   background-color: rgba(19, 18, 18, 0.875);
   border-radius: 15px;
   padding: 20px;
   display: flex;
   flex-direction: column;
   gap: 15px;
-  min-height: 590px; /* Ensure it's tall enough */
-  max-width: 70%;
+  height: 600px;
+  width: 190%;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  overflow-y: auto;
+  padding-right: 10px;
+  max-height: 220px;
+  min-height: 590px;
+}
+
+.chat-box::-webkit-scrollbar {
+  width: 4px;
+}
+
+.chat-box::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 6px;
+}
+
+.chat-box::-webkit-scrollbar-track {
+  background: #333;
 }
 
 .online-users {
+  flex: 1;
   width: 256%; /* Reduce width slightly */
-  max-width: 280px;
+  max-width: 400px;
+  min-width: 300px;
   background: #fff;
   border-radius: 15px;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
   padding: 15px;
+  height: auto;
+  overflow-y: auto;
 }
 
 .user-item {
@@ -282,6 +306,10 @@
   text-align: left;
 }
 
+.section-title {
+  color: white;
+}
+
 .my-message {
   background-color: #1a72b9;
   color: white;
@@ -346,6 +374,7 @@
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
   font-size: 16px;
   transition: all 0.3s ease;
+  resize: vertical;
 }
 
 .message-input:focus {
@@ -476,7 +505,7 @@
   border: none;
   padding: 10px 25px;
   font-size: 13px;
-  margin-bottom: 10px;
+  margin-bottom: 40px;
   border-radius: 500px;
   width: 50%;
   cursor: pointer;

@@ -16,7 +16,7 @@ import Profile from "./components/profile.tsx";
 import PrivateRoute from "./components/PrivateRoute.tsx";
 import PendingRequests from "./components/Requests.tsx";
 import ChatBox from "./components/ChatBox.tsx";
-import Main from "./pages/mainPage.tsx";
+import Main from "../src/pages/mainPage.tsx";
 
 const App: React.FC = () => {
   {

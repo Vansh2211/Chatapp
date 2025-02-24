@@ -5,11 +5,11 @@ import http from "http";
 import { Server } from "socket.io";
 import connectDB from "./config/db";
 import authRoutes from "./routes/auth";
-import actionRoutes from "/Users/juntrax/Desktop/Chatapp/backend/src/routes/actionRoutes";
+import actionRoutes from "./routes/actionRoutes";
 import requestRoutes from "./controller/userRequestController";
 import Message from "./models/message";
-import { Conversation } from "/Users/juntrax/Desktop/Chatapp/backend/src/models/conversation";
-import ensureAuthenticated from "/Users/juntrax/Desktop/Chatapp/backend/src/routes/authEnsure";
+import { Conversation } from "./models/conversation";
+import ensureAuthenticated from "./routes/authEnsure";
 
 require("dotenv").config();
 

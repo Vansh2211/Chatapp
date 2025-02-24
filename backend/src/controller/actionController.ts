@@ -55,7 +55,6 @@ export const onlineUsers = async (
   res: Response
 ): Promise<void> => {
   const user = req.user;
-  console.log("decoded", user);
   try {
     // Fetch user details for all online users
     const users = await User.find({ online: true }).select("name email mobile");
@@ -85,7 +84,7 @@ export const getMessages = async (
     });
 
     if (!conversation) {
-      res.status(200).json({ messages: [] }); // No messages yet
+      res.status(200).json({ messages: [] });
       return;
     }
 

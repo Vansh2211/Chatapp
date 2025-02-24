@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
 import io from "socket.io-client";
-import User, {
-  IUser,
-} from "/Users/juntrax/Desktop/Chatapp/backend/src/models/User.ts";
+import { IUser } from "/Users/juntrax/Desktop/Chatapp/backend/src/models/User.ts";
 
 import { Socket } from "socket.io-client";
 

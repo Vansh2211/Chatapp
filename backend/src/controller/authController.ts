@@ -4,7 +4,7 @@ import express, { Request, Response, NextFunction } from "express";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import User, { IUser } from "../models/User";
-import Message from "/Users/juntrax/Desktop/Chatapp/backend/src/models/message";
+import Message from "../models/message";
 import { useReducer } from "react";
 
 // Register User
