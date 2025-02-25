@@ -217,8 +217,8 @@ const Home: React.FC = () => {
 
         {loggedInUser && (
           <p className="welcome-message">
-            Hi {loggedInUser?.name} <span className="user-name"></span>! Ready
-            to chat?
+            Hi {loggedInUser?.name}
+            <span className="user-name"></span>, Ready to chat?
           </p>
         )}
 
@@ -259,23 +259,23 @@ const Home: React.FC = () => {
             <h3>Our Users:</h3>
             {Array.isArray(onlineUsers) && onlineUsers.length > 0 ? (
               <ul className="user-list">
-                {onlineUsers.map((user, index) => (
-                  <li key={user.id || index} className="user-item">
-                    <div className="user-avatar">👤</div>
-                    <div className="user-info"></div>{" "}
-                    {/* Fallback key to prevent duplicate key warnings */}
-                    {user.name ? user.name : "Unknown User"}
-                    <button
-                      className="request-chat-button"
-                      title="click for start chatting"
-                      onClick={() => {
-                        handleSelectedUser(onlineUsers[index]);
-                      }}
-                    >
-                      Chat
-                    </button>
-                  </li>
-                ))}
+                {onlineUsers
+                  .filter((user) => user.online !== false) // Show users if `isOnline` is true OR undefined
+                  .map((user, index) => (
+                    <li key={user.id || index} className="user-item">
+                      <div className="user-avatar">👤</div>
+                      <div className="user-info">
+                        {user.name ? user.name : "Unknown User"}
+                      </div>
+                      <button
+                        className="request-chat-button"
+                        title="Click to start chatting"
+                        onClick={() => handleSelectedUser(user)}
+                      >
+                        Chat
+                      </button>
+                    </li>
+                  ))}
               </ul>
             ) : (
               <p>No users online</p>
