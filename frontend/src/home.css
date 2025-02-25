@@ -12,10 +12,6 @@
   border-radius: 90px;
 
   /* Centering the container itself */
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
 }
 
 .home-container .main-content .title {
@@ -143,7 +139,7 @@
 .chat-container {
   display: flex;
   flex-direction: row;
-  align-items: flex-start;
+  align-items: stretch;
   justify-content: space-between;
   gap: 20px;
   width: 100%;
@@ -153,22 +149,20 @@
 
 /* Chat Box */
 .chat-box {
-  flex-grow: 1;
-  flex: 1;
+  flex: 1; /* Takes available space */
   background-color: rgba(19, 18, 18, 0.875);
   border-radius: 15px;
   padding: 20px;
   display: flex;
   flex-direction: column;
   gap: 15px;
-  height: 600px;
-  width: 190%;
+  width: 100%; /* Match parent container */
+  max-width: 400px; /* Adjust as needed */
+  min-width: 300px; /* Ensures responsiveness */
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
-  overflow-y: auto;
-  padding-right: 10px;
-  max-height: 220px;
-  min-height: 590px;
+  overflow-y: auto; /* Enables scrolling */
+  height: auto; /* Let it grow with content */
+  min-height: 600px; /* Ensures enough space */
 }
 
 .chat-box::-webkit-scrollbar {
@@ -189,7 +183,7 @@
   width: 256%; /* Reduce width slightly */
   max-width: 400px;
   min-width: 300px;
-  background: #fff;
+  background: lightgrey;
   border-radius: 15px;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
   padding: 15px;
