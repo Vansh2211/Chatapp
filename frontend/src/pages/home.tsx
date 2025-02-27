@@ -127,9 +127,13 @@ const Home: React.FC = () => {
 
         const data = response.data;
 
-        const filteredUsers = data.onlineUsers.filter(
+        let filteredUsers = data.onlineUsers.filter(
           (user: IUser) => user._id !== loggedInUser?._id
         );
+
+        // filteredUsers = filteredUsers.filter(
+        //   (user: IUser) => user.online === true
+        // );
 
         setOnlineUsers(filteredUsers);
 
@@ -142,9 +146,11 @@ const Home: React.FC = () => {
     fetchOnlineUsers();
 
     socket.on("updateOnlineUsers", (users: IUser[]) => {
-      const filteredUsers = users.filter(
+      let filteredUsers = users.filter(
         (user) => user._id !== loggedInUser?._id
       );
+
+      filteredUsers = users.filter((user) => user.online === true);
       setOnlineUsers(filteredUsers);
       console.log("Updated Online Users :", filteredUsers);
     });
@@ -260,7 +266,7 @@ const Home: React.FC = () => {
             {Array.isArray(onlineUsers) && onlineUsers.length > 0 ? (
               <ul className="user-list">
                 {onlineUsers
-                  .filter((user) => user.online !== false) // Show users if `isOnline` is true OR undefined
+                  // .filter((user) => user.online === true)
                   .map((user, index) => (
                     <li key={user.id || index} className="user-item">
                       <div className="user-avatar">👤</div>

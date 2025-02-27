@@ -80,7 +80,7 @@ export const getMessages = async (
     }
 
     const conversation = await Conversation.findOne({
-      participants: { $all: [senderId, receiverId] },
+      participants: { $size: 2, $all: [senderId, receiverId] },
     });
 
     if (!conversation) {
