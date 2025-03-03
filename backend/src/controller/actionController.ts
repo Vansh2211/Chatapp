@@ -67,6 +67,34 @@ export const onlineUsers = async (
   }
 };
 
+export const clearMessages = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const { senderId, receiverId } = req.body;
+
+    if (!senderId || !receiverId) {
+      res.status(400).json({ message: "Sender and receiver IDs are required" });
+      return;
+    }
+
+    await Message.deleteMany({
+      $or: [
+        { senderId, receiverId },
+        { senderId: receiverId, receiverId: senderId },
+      ],
+    });
+
+    res
+      .status(200)
+      .json({ success: true, message: "Chat cleared successfully" });
+  } catch (error) {
+    console.error("Error clearing chat:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
 export const getMessages = async (
   req: Request,
   res: Response

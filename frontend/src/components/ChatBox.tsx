@@ -77,9 +77,18 @@ const ChatBox: React.FC<ChatBoxProps> = ({ selectedUser, loggedInUser }) => {
     }
   };
 
-  const clearChat = () => {
+  const clearChat = async () => {
     console.log("clear");
-    setMessages([]);
+    alert("Chat cleared");
+    try {
+      await manualAxios.post("/action/clearMessages", {
+        senderId: loggedInUser?._id,
+        receiverId: selectedUser._id,
+      });
+      setMessages([]);
+    } catch (error) {
+      console.error("Error clearing chat:", error);
+    }
   };
 
   const handleTyping = (e: React.ChangeEvent<HTMLInputElement>) => {
