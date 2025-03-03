@@ -264,7 +264,7 @@ const Home: React.FC = () => {
           <div className="online-users">
             {loggedInUser && (
               <b>
-                <p>Welcome {loggedInUser?.name}!</p>
+                <p className="welcome-user">Welcome {loggedInUser?.name}!</p>
               </b>
             )}
             <h3>Our Users:</h3>

@@ -99,7 +99,7 @@ const ChatBox: React.FC<ChatBoxProps> = ({ selectedUser, loggedInUser }) => {
     };
 
     getMessage();
-  }, []);
+  }, [selectedUser, loggedInUser]);
 
   return (
     <div className="chat-box">
