@@ -3,6 +3,7 @@ import io from "socket.io-client";
 import { IUser } from "/Users/juntrax/Desktop/Chatapp/backend/src/models/User.ts";
 
 import { Socket } from "socket.io-client";
+import manualAxios from "../config/axiosConfig";
 
 type ChatBoxProps = {
   selectedUser: IUser;
@@ -52,7 +53,7 @@ const ChatBox: React.FC<ChatBoxProps> = ({ selectedUser, loggedInUser }) => {
 
     const data = response.json();
 
-    console.log("Message", data);
+    // console.log("Message", data);
 
     if (currentMessage.trim() && selectedUser.name) {
       const message: Message = {
@@ -87,8 +88,18 @@ const ChatBox: React.FC<ChatBoxProps> = ({ selectedUser, loggedInUser }) => {
   };
 
   useEffect(() => {
-    console.log("useeffect", messages);
-  }, [messages]);
+    const getMessage = async () => {
+      const response = await manualAxios.post("/action/messages", {
+        senderId: loggedInUser?._id,
+        receiverId: selectedUser._id,
+      });
+
+      setMessages(response.data.messages);
+      // console.log(response.data);
+    };
+
+    getMessage();
+  }, []);
 
   return (
     <div className="chat-box">

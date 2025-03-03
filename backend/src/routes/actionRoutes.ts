@@ -11,7 +11,7 @@ const router = express.Router();
 
 router.get("/me", getMe);
 router.get("/online", onlineUsers);
-router.get("/:senderId/:receive", getMessages);
+router.post("/messages", getMessages);
 
 router.get("/allUser", getUsers);
 

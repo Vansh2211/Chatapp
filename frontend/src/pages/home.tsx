@@ -29,6 +29,7 @@ const Home: React.FC = () => {
   const [onlineUsers, setOnlineUsers] = useState<IUser[]>([]);
   const [loggedInUser, setLoggedInUser] = useState<IUser | null>(null);
   const [isMenuVisible, setIsMenuVisible] = useState<boolean>(false);
+  const [isChatVisible, setIsChatVisible] = useState<boolean>(false);
   const [users, setUsers] = useState<IUser | null>(null);
   const [selectedUser, setSelectedUser] = useState<IUser | null>(null);
 
@@ -123,17 +124,13 @@ const Home: React.FC = () => {
           return;
         }
 
-        const response = await manualAxios.get("action/online");
+        const response = await manualAxios.get("/action/online");
 
         const data = response.data;
 
         let filteredUsers = data.onlineUsers.filter(
-          (user: IUser) => user._id !== loggedInUser?._id
+          (user: IUser) => user._id !== loggedInUser?._id || user.online
         );
-
-        // filteredUsers = filteredUsers.filter(
-        //   (user: IUser) => user.online === true
-        // );
 
         setOnlineUsers(filteredUsers);
 
@@ -147,10 +144,9 @@ const Home: React.FC = () => {
 
     socket.on("updateOnlineUsers", (users: IUser[]) => {
       let filteredUsers = users.filter(
-        (user) => user._id !== loggedInUser?._id
+        (user) => user._id !== loggedInUser?._id || user.online
       );
 
-      filteredUsers = users.filter((user) => user.online === true);
       setOnlineUsers(filteredUsers);
       console.log("Updated Online Users :", filteredUsers);
     });
@@ -160,7 +156,7 @@ const Home: React.FC = () => {
     };
   }, [loggedInUser]);
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     localStorage.removeItem("jwtToken");
     localStorage.removeItem("name");
     localStorage.removeItem("email");
@@ -168,6 +164,9 @@ const Home: React.FC = () => {
     localStorage.removeItem("user");
     alert("Logout successful!");
     navigate("/Login");
+    const response = await manualAxios.post("/auth/logout", {
+      email: loggedInUser?.email,
+    });
 
     socket.disconnect();
   };
@@ -179,6 +178,7 @@ const Home: React.FC = () => {
 
   const handleSelectedUser = (user: IUser) => {
     setSelectedUser(user);
+    setMessages([]);
   };
 
   // Ensure messages are received once, outside the function
@@ -195,6 +195,11 @@ const Home: React.FC = () => {
   const handleMenu = () => {
     console.log("Menu clicked");
     setIsMenuVisible((prev) => !prev);
+  };
+
+  const handleChat = () => {
+    console.log("chat clicked");
+    setIsChatVisible((prev) => !prev);
   };
 
   const handleProfile = () => {
@@ -266,20 +271,24 @@ const Home: React.FC = () => {
             {Array.isArray(onlineUsers) && onlineUsers.length > 0 ? (
               <ul className="user-list">
                 {onlineUsers
-                  // .filter((user) => user.online === true)
+                  // .filter((user) => user.online)
                   .map((user, index) => (
                     <li key={user.id || index} className="user-item">
                       <div className="user-avatar">👤</div>
                       <div className="user-info">
                         {user.name ? user.name : "Unknown User"}
                       </div>
+
+                      {/* {isChatVisible && ( */}
                       <button
                         className="request-chat-button"
                         title="Click to start chatting"
                         onClick={() => handleSelectedUser(user)}
                       >
+                        {/* {isChatVisible ? "Close" : " Chat"} */}
                         Chat
                       </button>
+                      {/* )} */}
                     </li>
                   ))}
               </ul>
