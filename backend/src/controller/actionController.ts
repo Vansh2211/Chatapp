@@ -6,6 +6,7 @@ import jwt from "jsonwebtoken";
 import User, { IUser } from "../models/User";
 import Message from "/Users/juntrax/Desktop/Chatapp/backend/src/models/message";
 import { Conversation } from "/Users/juntrax/Desktop/Chatapp/backend/src/models/conversation";
+import Media from "../models/media";
 
 //getMe
 export const getMe = async (req: Request, res: Response): Promise<void> => {
@@ -124,5 +125,36 @@ export const getMessages = async (
   } catch (error) {
     console.error("Error fetching messages:", error);
     res.status(500).json({ message: "Error fetching messages", error });
+  }
+};
+
+export const getMedia = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { senderId, receiverId, message, mediaData, mediaType, timestamp } =
+      req.body;
+
+    const newMedia = new Media({
+      senderId,
+      receiverId,
+      mediaData, // Base64 data
+      mediaType, // File type
+      timestamp,
+    });
+
+    const savedMedia = await newMedia.save();
+
+    const newMessage = new Message({
+      senderId,
+      receiverId,
+      message: savedMedia._id, // Store reference instead of full Base64
+      timestamp,
+    });
+
+    await newMessage.save();
+
+    res.status(201).json({ message: "Media and message saved successfully" });
+  } catch (error) {
+    console.error("Error saving media:", error);
+    res.status(500).json({ message: "Error saving media" });
   }
 };

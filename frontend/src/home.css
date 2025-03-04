@@ -24,7 +24,12 @@
 .home-container {
   padding: 0.5rem;
   width: 100%;
+
   /* width: 20rem; */
+}
+
+.inhome-container {
+  border-color: #0056b3;
 }
 
 .body {
@@ -34,15 +39,14 @@
   align-items: center;
 }
 
-.main-content {
+/* .main-content {
   padding: 2rem;
   border-radius: 15px;
   background-color: #fff;
-  max-width: 650px;
-  width: 10px;
+  max-width: 120%;
   box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
   text-align: center;
-}
+} */
 
 .title {
   font-size: 52px;
@@ -59,7 +63,7 @@
 
 /* Welcome Message */
 .welcome-message {
-  font-size: 20px;
+  font-size: 30px;
   color: #4f4f4f;
   margin-bottom: 30px;
   text-align: center;
@@ -121,7 +125,7 @@
   flex: 1; /* Allow main content to grow to fill available space */
   flex-grow: 1;
   padding: 30px;
-  width: 200%;
+  width: 100%;
   margin: auto;
   display: flex;
   flex-direction: column;
@@ -152,14 +156,22 @@
   display: flex;
   flex-direction: column;
   gap: 15px;
-  height: 300px;
-  max-width: 70%;
+  width: 70%; /* Ensure width doesn't change */
+  height: 590px; /* Fixed height */
+  max-height: 590px; /* Prevent increasing size */
+  min-height: 590px; /* Prevent decreasing size */
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
-  overflow-y: auto;
+  overflow-y: auto; /* Allow scrolling */
   padding-right: 10px;
-  max-height: 220px;
-  min-height: 590px;
+}
+
+.chat-box img {
+  max-width: 100%; /* Ensure image doesn't exceed the chat box width */
+  max-height: 200px; /* Set max height */
+  width: auto; /* Maintain aspect ratio */
+  height: auto; /* Maintain aspect ratio */
+  object-fit: cover; /* Crop excess if needed */
+  border-radius: 10px; /* Make it look nice */
 }
 
 .chat-box::-webkit-scrollbar {
@@ -219,6 +231,7 @@
   align-items: center;
   gap: 12px;
   padding: 12px;
+  margin-right: 18px;
   border-bottom: 1px solid #e0e0e0;
   cursor: pointer;
   transition: background 0.3s ease-in-out;
@@ -247,9 +260,10 @@
 .request-chat-button {
   background: #11d525;
   color: #fff;
-  padding-left: 0px;
+  padding: 10px 10px;
   border-radius: 100px;
   font-size: 14px;
+  margin-bottom: 8px;
   border: none;
   cursor: pointer;
 }
@@ -390,7 +404,7 @@
 }
 
 .message-input {
-  width: 100%;
+  width: 120%;
   max-width: 500px;
   padding: 12px 15px;
   border-radius: 20px;
@@ -399,6 +413,7 @@
   font-size: 16px;
   transition: all 0.3s ease;
   resize: vertical;
+  margin-bottom: -20px;
 }
 
 .message-input:focus {
@@ -407,7 +422,8 @@
 }
 
 .send-button,
-.clear-button {
+.clear-button,
+.media-button {
   padding: 12px 16px;
   border-radius: 100px;
   font-size: 16px;
@@ -431,6 +447,7 @@
   background-color: #ff3b30;
   color: white;
   border: none;
+  border-radius: 10px;
 }
 .typing-indicator {
   font-size: 14px;
@@ -466,6 +483,25 @@
   background-color: #1565c0;
 }
 
+.media-button {
+  background-color: #ffa726;
+  color: white;
+  padding: 12px 16px;
+  padding-left: 20px;
+  padding-right: 30px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-bottom: -25px;
+  margin-left: -16px;
+  margin-right: -16px;
+  transition: yellow 0.3s ease;
+}
+
+.media-button:hover {
+  color: #fb8c00;
+}
+
 /* Media Input */
 .media-input {
   display: none;
@@ -481,18 +517,6 @@
   max-height: 100px;
   border-radius: 10px;
   margin-top: 10px;
-}
-
-/* Media Button */
-.media-input-label {
-  background-color: #ffa726;
-  color: white;
-  padding: 10px 20px;
-  border-radius: 100px;
-  cursor: pointer;
-  font-size: 16px;
-  margin-bottom: -25px;
-  transition: background-color 0.3s ease;
 }
 
 .media-input-label:hover {

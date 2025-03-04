@@ -16,6 +16,8 @@ type Message = {
   senderId: string;
   receiverId: any;
   message: string;
+  base64String: string; // Base64 data
+  mediaType: string;
   timestamp: string;
 };
 
@@ -60,6 +62,8 @@ const ChatBox: React.FC<ChatBoxProps> = ({ selectedUser, loggedInUser }) => {
         senderId: (loggedInUser?._id as string) || "Unknown",
         receiverId: selectedUser._id,
         message: currentMessage,
+        base64String: "",
+        mediaType: "",
         timestamp: new Date().toLocaleTimeString([], {
           hour: "2-digit",
           minute: "2-digit",
@@ -77,8 +81,55 @@ const ChatBox: React.FC<ChatBoxProps> = ({ selectedUser, loggedInUser }) => {
     }
   };
 
+  const handleMediaUpload = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onloadend = async () => {
+      const base64String = reader.result as string;
+
+      const message: Message = {
+        senderId: (loggedInUser?._id as string) || "Unknown",
+        receiverId: selectedUser._id,
+        message: currentMessage,
+        base64String: base64String,
+        mediaType: file.type,
+        timestamp: new Date().toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+        }),
+
+        id: Date.now(),
+      };
+
+      // Send message to server and socket
+      socket.emit("send_message", message);
+      setMessages((prevMessages) => [...prevMessages, message]);
+
+      setCurrentMessage("");
+
+      setIsTyping(false);
+      // // Save in database
+      // try {
+      //   await manualAxios.post("/action/media", message);
+      // } catch (error) {
+      //   console.error("Error saving media:", error);
+      // }
+    };
+  };
+
   const clearChat = async () => {
+    const confirmClear = window.confirm(
+      "Are you sure you want to clear the chat?"
+    );
+
+    if (!confirmClear) return;
     console.log("clear");
+
     alert("Chat cleared");
     try {
       await manualAxios.post("/action/clearMessages", {
@@ -110,6 +161,10 @@ const ChatBox: React.FC<ChatBoxProps> = ({ selectedUser, loggedInUser }) => {
     getMessage();
   }, [selectedUser, loggedInUser]);
 
+  useEffect(() => {
+    console.log("messages Check: ", messages);
+  }, [messages]);
+
   return (
     <div className="chat-box">
       <h2 className="section-title">Chat with {selectedUser.name} </h2>
@@ -129,7 +184,28 @@ const ChatBox: React.FC<ChatBoxProps> = ({ selectedUser, loggedInUser }) => {
                 : selectedUser.name}
               :
             </strong>{" "}
-            {msg.message} <span className="timestamp">{msg.timestamp}</span>
+            {msg.base64String ? (
+              msg.mediaType?.includes("image") ? (
+                <img
+                  src={msg.base64String}
+                  alt="Media"
+                  className="media-image"
+                />
+              ) : msg.mediaType?.includes("pdf") ? (
+                <a
+                  href={msg.base64String}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  📄 Open PDF
+                </a>
+              ) : (
+                <p>Unsupported file type</p>
+              )
+            ) : (
+              msg.message
+            )}
+            <span className="timestamp">{msg.timestamp}</span>
           </div>
         ))}
       </div>
@@ -161,6 +237,32 @@ const ChatBox: React.FC<ChatBoxProps> = ({ selectedUser, loggedInUser }) => {
             <path d="M440-160v-487L216-423l-56-57 320-320 320 320-56 57-224-224v487h-80Z" />
           </svg>
         </button>
+
+        <div className="media-upload">
+          <input
+            type="file"
+            accept="image/*, application/pdf"
+            onChange={handleMediaUpload}
+            className="media-input"
+            id="mediaInput"
+            hidden
+          />
+          <button
+            className="media-button"
+            onClick={() => document.getElementById("mediaInput")?.click()}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              height="20px"
+              viewBox="0 -960 960 960"
+              width="20px"
+              fill="#e8eaed"
+            >
+              <path d="M696-312q0 89.86-63.07 152.93Q569.86-96 480-96q-91 0-153.5-65.5T264-319v-389q0-65 45.5-110.5T420-864q66 0 111 48t45 115v365q0 40.15-27.93 68.07Q520.15-240 480-240q-41 0-68.5-29.09T384-340v-380h72v384q0 10.4 6.8 17.2 6.8 6.8 17.2 6.8 10.4 0 17.2-6.8 6.8-6.8 6.8-17.2v-372q0-35-24.5-59.5T419.8-792q-35.19 0-59.5 25.5Q336-741 336-706v394q0 60 42 101.5T480-168q60 1 102-43t42-106v-403h72v408Z" />
+            </svg>
+          </button>
+        </div>
+
         <button onClick={clearChat} className="clear-button">
           <svg
             xmlns="http://www.w3.org/2000/svg"

@@ -10,6 +10,7 @@ import requestRoutes from "./controller/userRequestController";
 import Message from "./models/message";
 import { Conversation } from "./models/conversation";
 import ensureAuthenticated from "./routes/authEnsure";
+import Media from "./models/media";
 
 require("dotenv").config();
 
@@ -32,7 +33,7 @@ app.use(
   })
 );
 
-app.use(express.json());
+app.use(express.json({ limit: 200 * 1024 }));
 
 app.use("/auth", authRoutes);
 app.use("/requests", ensureAuthenticated, requestRoutes);
@@ -98,11 +99,16 @@ io.on("connection", (socket) => {
         return;
       }
 
+      console.log("message check: ", message);
+
       const newMessage = new Message({
-        conversationId: conversation._id,
+        conversationId: conversation._id.toString(),
         senderId: message.senderId,
         receiverId: message.receiverId,
-        message: message.message,
+        message: message.message, // Displayed in chat
+        base64String: message.base64String, // Store media reference
+        mediaType: message.mediaType,
+        timestamp: new Date().toISOString(),
       });
 
       await newMessage.save();

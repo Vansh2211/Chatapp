@@ -5,6 +5,8 @@ export interface IMessage extends Document {
   receiverId: mongoose.Types.ObjectId;
   conversationId: mongoose.Types.ObjectId;
   message: string;
+  base64String: String; // Store Base64
+  mediaType: String;
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -29,6 +31,12 @@ const messageSchema = new Schema<IMessage>(
     message: {
       type: String,
       required: true,
+    },
+    base64String: {
+      type: String,
+    },
+    mediaType: {
+      type: String,
     },
   },
   { timestamps: true }

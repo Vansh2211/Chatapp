@@ -118,7 +118,7 @@ const Home: React.FC = () => {
   useEffect(() => {
     const fetchOnlineUsers = async () => {
       try {
-        const token = localStorage.getItem("jwtToken"); // Retrieve token from localStorage
+        const token = localStorage.getItem("jwtToken");
         if (!token) {
           console.error("No token found");
           return;
@@ -188,7 +188,7 @@ const Home: React.FC = () => {
     });
 
     return () => {
-      socket.off("receive_message"); // Cleanup listener on unmount
+      socket.off("receive_message");
     };
   }, []);
 
@@ -208,7 +208,7 @@ const Home: React.FC = () => {
   };
 
   return (
-    <div className="home-container">
+    <div className="inhome-container">
       {/* Main Content */}
       <div className="main-content">
         <button onClick={handleLogout} className="logout-button" title="Logout">
@@ -270,27 +270,22 @@ const Home: React.FC = () => {
             <h3>Online Users:</h3>
             {Array.isArray(onlineUsers) && onlineUsers.length > 0 ? (
               <ul className="user-list">
-                {onlineUsers
-                  // .filter((user) => user.online)
-                  .map((user, index) => (
-                    <li key={user.id || index} className="user-item">
-                      <div className="user-avatar">👤</div>
-                      <div className="user-info">
-                        {user.name ? user.name : "Unknown User"}
-                      </div>
+                {onlineUsers.map((user, index) => (
+                  <li key={user.id || index} className="user-item">
+                    <div className="user-avatar">👤</div>
+                    <div className="user-info">
+                      {user.name ? user.name : "Unknown User"}
+                    </div>
 
-                      {/* {isChatVisible && ( */}
-                      <button
-                        className="request-chat-button"
-                        title="Click to start chatting"
-                        onClick={() => handleSelectedUser(user)}
-                      >
-                        {/* {isChatVisible ? "Close" : " Chat"} */}
-                        Chat
-                      </button>
-                      {/* )} */}
-                    </li>
-                  ))}
+                    <button
+                      className="request-chat-button"
+                      title="Click to start chatting"
+                      onClick={() => handleSelectedUser(user)}
+                    >
+                      Chat
+                    </button>
+                  </li>
+                ))}
               </ul>
             ) : (
               <p>No users online</p>
