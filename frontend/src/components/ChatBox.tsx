@@ -30,23 +30,6 @@ const ChatBox: React.FC<ChatBoxProps> = ({ selectedUser, loggedInUser }) => {
 
   //  const [users, setUsers] = useState<IUser | null>(null);
 
-  useEffect(() => {
-    socket.on("receive_message", (msg: Message) => {
-      if (
-        (msg.senderId === loggedInUser?._id &&
-          msg.receiverId === selectedUser._id) ||
-        (msg.senderId === selectedUser._id &&
-          msg.receiverId === loggedInUser?._id)
-      ) {
-        setMessages((prevMessages) => [...prevMessages, msg]);
-      }
-    });
-
-    return () => {
-      socket.off("receive_message");
-    };
-  }, [selectedUser._id, loggedInUser?._id]);
-
   const handleSendMessage = async () => {
     const response = await fetch("http://localhost:3000/action/messages", {
       method: "GET",
@@ -95,7 +78,7 @@ const ChatBox: React.FC<ChatBoxProps> = ({ selectedUser, loggedInUser }) => {
       const message: Message = {
         senderId: (loggedInUser?._id as string) || "Unknown",
         receiverId: selectedUser._id,
-        message: currentMessage,
+        message: currentMessage || "media",
         base64String: base64String,
         mediaType: file.type,
         timestamp: new Date().toLocaleTimeString([], {
@@ -106,9 +89,10 @@ const ChatBox: React.FC<ChatBoxProps> = ({ selectedUser, loggedInUser }) => {
         id: Date.now(),
       };
 
+      console.log("000000", message);
       // Send message to server and socket
       socket.emit("send_message", message);
-      setMessages((prevMessages) => [...prevMessages, message]);
+      // setMessages((prevMessages) => [...prevMessages, message]);
 
       setCurrentMessage("");
 
@@ -120,6 +104,15 @@ const ChatBox: React.FC<ChatBoxProps> = ({ selectedUser, loggedInUser }) => {
       //   console.error("Error saving media:", error);
       // }
     };
+  };
+
+  const base64ToBlob = (base64: string, contentType: string) => {
+    const byteCharacters = atob(base64.split(",")[1]);
+    const byteNumbers = new Array(byteCharacters.length)
+      .fill(0)
+      .map((_, i) => byteCharacters.charCodeAt(i));
+    const byteArray = new Uint8Array(byteNumbers);
+    return new Blob([byteArray], { type: contentType });
   };
 
   const clearChat = async () => {
@@ -162,6 +155,23 @@ const ChatBox: React.FC<ChatBoxProps> = ({ selectedUser, loggedInUser }) => {
   }, [selectedUser, loggedInUser]);
 
   useEffect(() => {
+    socket.on("receive_message", (msg: Message) => {
+      if (
+        (msg.senderId === loggedInUser?._id &&
+          msg.receiverId === selectedUser._id) ||
+        (msg.senderId === selectedUser._id &&
+          msg.receiverId === loggedInUser?._id)
+      ) {
+        setMessages((prevMessages) => [...prevMessages, msg]);
+      }
+    });
+
+    return () => {
+      socket.off("receive_message");
+    };
+  }, [selectedUser._id, loggedInUser?._id]);
+
+  useEffect(() => {
     console.log("messages Check: ", messages);
   }, [messages]);
 
@@ -193,7 +203,9 @@ const ChatBox: React.FC<ChatBoxProps> = ({ selectedUser, loggedInUser }) => {
                 />
               ) : msg.mediaType?.includes("pdf") ? (
                 <a
-                  href={msg.base64String}
+                  href={URL.createObjectURL(
+                    base64ToBlob(msg.base64String, "application/pdf")
+                  )}
                   target="_blank"
                   rel="noopener noreferrer"
                 >

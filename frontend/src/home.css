@@ -30,6 +30,7 @@
 
 .inhome-container {
   border-color: #0056b3;
+  width: 100%;
 }
 
 .body {
@@ -125,7 +126,8 @@
   flex: 1; /* Allow main content to grow to fill available space */
   flex-grow: 1;
   padding: 30px;
-  width: 100%;
+  width: 90vw;
+  border-color: #0056b3;
   margin: auto;
   display: flex;
   flex-direction: column;
@@ -146,32 +148,13 @@
   margin: auto;
 }
 
-/* Chat Box */
-.chat-box {
-  flex-grow: 1;
-  flex: 1;
-  background-color: rgba(19, 18, 18, 0.875);
-  border-radius: 30px;
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  width: 70%; /* Ensure width doesn't change */
-  height: 590px; /* Fixed height */
-  max-height: 590px; /* Prevent increasing size */
-  min-height: 590px; /* Prevent decreasing size */
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
-  overflow-y: auto; /* Allow scrolling */
-  padding-right: 10px;
-}
-
 .chat-box img {
-  max-width: 100%; /* Ensure image doesn't exceed the chat box width */
-  max-height: 200px; /* Set max height */
-  width: auto; /* Maintain aspect ratio */
-  height: auto; /* Maintain aspect ratio */
-  object-fit: cover; /* Crop excess if needed */
-  border-radius: 10px; /* Make it look nice */
+  max-width: 100%;
+  max-height: 200px;
+  width: auto;
+  height: auto;
+  object-fit: cover;
+  border-radius: 10px;
 }
 
 .chat-box::-webkit-scrollbar {
@@ -190,22 +173,40 @@
 .online-users {
   flex-grow: 1;
   flex: 1;
-  width: 50%; /* Reduce width slightly */
+  /* width: 30%; */
   border-radius: 30px;
   padding: 10px;
   display: flex;
   flex-direction: column;
   gap: 15px;
-  height: 320x;
-  max-width: 100%;
+  height: 340px;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
   overflow: hidden;
   overflow-y: auto;
   padding-right: 10px;
   /* max-height: 240px; */
-  min-height: 590px;
+  min-height: 610px;
   background-color: rgba(19, 18, 18, 0.875);
   color: #e0e4e7;
+}
+
+/* Chat Box */
+.chat-box {
+  /* flex-grow: 1;
+  flex: 1; */
+  background-color: rgba(19, 18, 18, 0.875);
+  border-radius: 30px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  width: 70%; /* Ensure width doesn't change */
+  height: 590px; /* Fixed height */
+  max-height: 590px; /* Prevent increasing size */
+  min-height: 590px; /* Prevent decreasing size */
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+  overflow-y: auto; /* Allow scrolling */
+  padding-right: 10px;
 }
 
 .welcome-user {
@@ -404,7 +405,7 @@
 }
 
 .message-input {
-  width: 120%;
+  width: 100%;
   max-width: 500px;
   padding: 12px 15px;
   border-radius: 20px;
@@ -488,7 +489,7 @@
   color: white;
   padding: 12px 16px;
   padding-left: 20px;
-  padding-right: 30px;
+  padding-right: 40px;
   border-radius: 10px;
   cursor: pointer;
   font-size: 16px;

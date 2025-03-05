@@ -208,100 +208,100 @@ const Home: React.FC = () => {
   };
 
   return (
-    <div className="inhome-container">
-      {/* Main Content */}
-      <div className="main-content">
-        <button onClick={handleLogout} className="logout-button" title="Logout">
-          <b>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              height="24px"
-              viewBox="0 -960 960 960"
-              width="24px"
-              fill="#e8eaed"
-            >
-              <path d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h280v80H200v560h280v80H200Zm440-160-55-58 102-102H360v-80h327L585-622l55-58 200 200-200 200Z" />
-            </svg>
-          </b>
-        </button>
-        <h1>V-ChatApp</h1>
+    // <div className="inhome-container">
+    // {/* Main Content */}
+    <div className="main-content">
+      <button onClick={handleLogout} className="logout-button" title="Logout">
+        <b>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            height="24px"
+            viewBox="0 -960 960 960"
+            width="24px"
+            fill="#e8eaed"
+          >
+            <path d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h280v80H200v560h280v80H200Zm440-160-55-58 102-102H360v-80h327L585-622l55-58 200 200-200 200Z" />
+          </svg>
+        </b>
+      </button>
+      <h1>V-ChatApp</h1>
 
-        {loggedInUser && (
-          <p className="welcome-message">
-            Hi {loggedInUser?.name}
-            <span className="user-name"></span>, Ready to chat?
-          </p>
-        )}
+      {loggedInUser && (
+        <p className="welcome-message">
+          Hi {loggedInUser?.name}
+          <span className="user-name"></span>, Ready to chat?
+        </p>
+      )}
 
-        <button
-          onClick={handleMenu}
-          className="menu-button"
-          title="click to menu bar..."
-        >
-          {isMenuVisible ? "Close Menu" : " Click to Open Menu"}
-        </button>
-        {/* Sidebar */}
-        {isMenuVisible && (
-          <div className="sidebar">
-            <h2 className="sidebar-title">Menu</h2>
-            <ul className="sidebar-list">
-              <li className="sidebar-item" onClick={handleHome}>
-                Home
-              </li>
-              <li className="sidebar-item" onClick={handleProfile}>
-                Profile
-              </li>
+      <button
+        onClick={handleMenu}
+        className="menu-button"
+        title="click to menu bar..."
+      >
+        {isMenuVisible ? "Close Menu" : " Click to Open Menu"}
+      </button>
+      {/* Sidebar */}
+      {isMenuVisible && (
+        <div className="sidebar">
+          <h2 className="sidebar-title">Menu</h2>
+          <ul className="sidebar-list">
+            <li className="sidebar-item" onClick={handleHome}>
+              Home
+            </li>
+            <li className="sidebar-item" onClick={handleProfile}>
+              Profile
+            </li>
 
-              <li className="sidebar-item">Settings</li>
-              <li className="sidebar-item" onClick={handleLogout}>
-                Logout
-              </li>
+            <li className="sidebar-item">Settings</li>
+            <li className="sidebar-item" onClick={handleLogout}>
+              Logout
+            </li>
+          </ul>
+        </div>
+      )}
+
+      <div className="chat-container">
+        <div className="online-users">
+          {loggedInUser && (
+            <b>
+              <p className="welcome-user">Welcome {loggedInUser?.name}!</p>
+            </b>
+          )}
+          <h3>Online Users:</h3>
+          {Array.isArray(onlineUsers) && onlineUsers.length > 0 ? (
+            <ul className="user-list">
+              {onlineUsers.map((user, index) => (
+                <li key={user.id || index} className="user-item">
+                  <div className="user-avatar">👤</div>
+                  <div className="user-info">
+                    {user.name ? user.name : "Unknown User"}
+                  </div>
+
+                  <button
+                    className="request-chat-button"
+                    title="Click to start chatting"
+                    onClick={() => handleSelectedUser(user)}
+                  >
+                    Chat
+                  </button>
+                </li>
+              ))}
             </ul>
-          </div>
-        )}
-
-        <div className="chat-container">
-          <div className="online-users">
-            {loggedInUser && (
-              <b>
-                <p className="welcome-user">Welcome {loggedInUser?.name}!</p>
-              </b>
-            )}
-            <h3>Online Users:</h3>
-            {Array.isArray(onlineUsers) && onlineUsers.length > 0 ? (
-              <ul className="user-list">
-                {onlineUsers.map((user, index) => (
-                  <li key={user.id || index} className="user-item">
-                    <div className="user-avatar">👤</div>
-                    <div className="user-info">
-                      {user.name ? user.name : "Unknown User"}
-                    </div>
-
-                    <button
-                      className="request-chat-button"
-                      title="Click to start chatting"
-                      onClick={() => handleSelectedUser(user)}
-                    >
-                      Chat
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p>No users online</p>
-            )}
-          </div>
-
-          {selectedUser && (
-            <ChatBox
-              selectedUser={selectedUser}
-              loggedInUser={loggedInUser}
-              socket={socket}
-            />
+          ) : (
+            <p>No users online</p>
           )}
         </div>
+
+        {selectedUser && (
+          <ChatBox
+            selectedUser={selectedUser}
+            loggedInUser={loggedInUser}
+            socket={socket}
+          />
+        )}
       </div>
     </div>
+    // </div>
   );
 };
 
