@@ -284,7 +284,8 @@
   align-content: right;
 }
 
-.profileDesign {
+.profileText {
+  width: 95%;
 }
 
 .edit-button,

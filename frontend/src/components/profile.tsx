@@ -100,8 +100,11 @@ const Profile = () => {
         <div className="sidebar">
           <h2 className="sidebar-title">Menu</h2>
           <ul className="sidebar-list">
-            <li className="sidebar-item" onClick={() => navigate("/home")}>
+            <li className="sidebar-item" onClick={() => navigate("/main")}>
               Home
+            </li>
+            <li className="sidebar-item" onClick={() => navigate("/home")}>
+              Chat Page
             </li>
             <li className="sidebar-item" onClick={() => navigate("/profile")}>
               Profile
