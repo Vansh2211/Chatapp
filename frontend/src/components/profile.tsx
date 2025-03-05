@@ -109,7 +109,7 @@ const Profile = () => {
             <li className="sidebar-item" onClick={() => navigate("/profile")}>
               Profile
             </li>
-            <li className="sidebar-item">Settings</li>
+
             <li
               className="sidebar-item"
               onClick={() => {

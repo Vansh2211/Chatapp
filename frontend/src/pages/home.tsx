@@ -252,7 +252,6 @@ const Home: React.FC = () => {
               Profile
             </li>
 
-            <li className="sidebar-item">Settings</li>
             <li className="sidebar-item" onClick={handleLogout}>
               Logout
             </li>
