@@ -64,7 +64,7 @@
 
 /* Welcome Message */
 .welcome-message {
-  font-size: 30px;
+  font-size: 20px;
   color: #4f4f4f;
   margin-bottom: 30px;
   text-align: center;
@@ -200,7 +200,7 @@
   display: flex;
   flex-direction: column;
   gap: 15px;
-  width: 70%; /* Ensure width doesn't change */
+  width: 60%; /* Ensure width doesn't change */
   height: 590px; /* Fixed height */
   max-height: 590px; /* Prevent increasing size */
   min-height: 590px; /* Prevent decreasing size */
@@ -282,6 +282,35 @@
   margin-bottom: 30px;
   padding: 10px;
   align-content: right;
+}
+
+.profileDesign {
+}
+
+.edit-button,
+.save-button,
+.cancel-button {
+  padding: 10px 15px;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  margin: 5px;
+}
+
+.edit-button {
+  background-color: #5d675d;
+  color: white;
+}
+
+.save-button {
+  background-color: #4caf50;
+  color: white;
+}
+
+.cancel-button {
+  background-color: #ff3b30;
+  color: white;
 }
 
 .logout-button {

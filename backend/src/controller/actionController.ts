@@ -158,3 +158,24 @@ export const getMedia = async (req: Request, res: Response): Promise<void> => {
     res.status(500).json({ message: "Error saving media" });
   }
 };
+
+export const updateUser = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const { name, email, mobile } = req.body;
+    const updatedUser = await User.findOneAndUpdate(
+      { email },
+      { name, mobile },
+      { new: true }
+    );
+
+    if (!updatedUser) res.status(404).json({ message: "User not found" });
+
+    res.status(200).json({ message: "User updated" });
+  } catch (error) {
+    console.error("Error updating profile:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};

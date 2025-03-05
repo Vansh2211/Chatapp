@@ -123,7 +123,6 @@ const ChatBox: React.FC<ChatBoxProps> = ({ selectedUser, loggedInUser }) => {
     if (!confirmClear) return;
     console.log("clear");
 
-    alert("Chat cleared");
     try {
       await manualAxios.post("/action/clearMessages", {
         senderId: loggedInUser?._id,
@@ -209,7 +208,7 @@ const ChatBox: React.FC<ChatBoxProps> = ({ selectedUser, loggedInUser }) => {
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  📄 Open PDF
+                  Open PDF 📄
                 </a>
               ) : (
                 <p>Unsupported file type</p>

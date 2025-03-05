@@ -7,6 +7,7 @@ import {
   getMessages,
   clearMessages,
   getMedia,
+  updateUser,
 } from "../controller/actionController";
 
 const router = express.Router();
@@ -15,6 +16,7 @@ router.get("/me", getMe);
 router.get("/online", onlineUsers);
 router.post("/messages", getMessages);
 router.post("/media", getMedia);
+router.post("/updateUser", updateUser);
 router.post("/clearMessages", clearMessages);
 
 router.get("/allUser", getUsers);
