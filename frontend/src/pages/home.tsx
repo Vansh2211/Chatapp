@@ -27,6 +27,7 @@ type User = {
 const Home: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [onlineUsers, setOnlineUsers] = useState<IUser[]>([]);
+  const [allUsers, setAllUsers] = useState<IUser[]>([]);
   const [loggedInUser, setLoggedInUser] = useState<IUser | null>(null);
   const [isMenuVisible, setIsMenuVisible] = useState<boolean>(false);
   const [isChatVisible, setIsChatVisible] = useState<boolean>(false);
@@ -156,6 +157,39 @@ const Home: React.FC = () => {
     };
   }, [loggedInUser]);
 
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const response = await manualAxios.get("/action/users");
+        const data = response.data;
+
+        let filteredUsers = data.users.filter(
+          (user: IUser) => user._id !== loggedInUser?._id
+        );
+
+        setAllUsers(filteredUsers);
+        console.log("All Users:", filteredUsers);
+      } catch (error) {
+        console.error("Error fetching all users:", error);
+      }
+    };
+
+    fetchUsers();
+
+    socket.on("updateAllUsers", (users: IUser[]) => {
+      let filteredUsers = users.filter(
+        (user) => user._id !== loggedInUser?._id
+      );
+
+      setAllUsers(filteredUsers);
+      console.log("Updated All Users:", filteredUsers);
+    });
+
+    return () => {
+      socket.off("updateAllUsers");
+    };
+  }, [loggedInUser]);
+
   const handleLogout = async () => {
     localStorage.removeItem("jwtToken");
     localStorage.removeItem("name");
@@ -224,7 +258,9 @@ const Home: React.FC = () => {
           </svg>
         </b>
       </button>
-      <h1>V-ChatApp</h1>
+      <nav className="main-header">
+        <h1>V-ChatApp</h1>
+      </nav>
 
       {loggedInUser && (
         <p className="welcome-message">
@@ -293,6 +329,30 @@ const Home: React.FC = () => {
             </ul>
           ) : (
             <p>No users online</p>
+          )}
+
+          <h3>Users:</h3>
+          {Array.isArray(allUsers) && allUsers.length > 0 ? (
+            <ul className="alluser-list">
+              {allUsers.map((user, index) => (
+                <li key={user.id || index} className="user-item">
+                  <div className="user-avatar">👤</div>
+                  <div className="user-info">
+                    {user.name ? user.name : "Unknown User"}
+                  </div>
+
+                  <button
+                    className="request-chat-button2"
+                    title="Click to start chatting"
+                    onClick={() => handleSelectedUser(user)}
+                  >
+                    Chat
+                  </button>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p></p>
           )}
         </div>
 

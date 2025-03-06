@@ -65,6 +65,7 @@ const io = new Server(server, {
 });
 
 const onlineUsers = new Map();
+const users = new Map();
 
 io.on("connection", (socket) => {
   console.log("New client connected:", socket.id);
@@ -128,6 +129,11 @@ io.on("connection", (socket) => {
   socket.on("userOnline", (user) => {
     onlineUsers.set(user, socket.id);
     io.emit("updateOnlineUsers", Array.from(onlineUsers.keys()));
+  });
+
+  socket.on("allUsers", (user) => {
+    users.set(user, socket.id);
+    io.emit("updateAllUsers", Array.from(users.keys()));
   });
 
   socket.on("disconnect", () => {

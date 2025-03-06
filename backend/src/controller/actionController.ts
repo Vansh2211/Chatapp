@@ -34,14 +34,13 @@ export const getMe = async (req: Request, res: Response): Promise<void> => {
 
 export const getUsers = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { name, email, mobile, password } = req.user as IUser;
-    if (!req.user) {
+    const users = await User.find({}, "name email mobile");
+    if (!users) {
       res.status(404).json({ message: "User not found" });
       return;
     }
-    console.log(name);
-    console.log(email);
-    res.status(200).json({ message: "User found", name });
+
+    res.status(200).json({ message: "User found", users });
   } catch (error) {
     res.status(500).json({ message: "Error fetching user", error });
   }

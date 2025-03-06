@@ -180,7 +180,12 @@ const ChatBox: React.FC<ChatBoxProps> = ({ selectedUser, loggedInUser }) => {
 
   return (
     <div className="chat-box">
-      <h2 className="section-title">Chat with {selectedUser.name} </h2>
+      <nav className="chat-header">
+        <div className="chat-user">
+          {/* <img src={selectedUser.profilePic || "default-avatar.png"} alt="User" className="chat-avatar" /> */}
+          <span className="chat-username"> Chat with {selectedUser.name}</span>
+        </div>
+      </nav>
       <div className="messages-box">
         {messages.map((msg, index) => (
           <div

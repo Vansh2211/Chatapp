@@ -13,6 +13,7 @@ import {
 const router = express.Router();
 
 router.get("/me", getMe);
+router.get("/users", getUsers);
 router.get("/online", onlineUsers);
 router.post("/messages", getMessages);
 router.post("/media", getMedia);
