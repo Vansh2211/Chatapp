@@ -117,77 +117,29 @@ const Home: React.FC = () => {
   }, [loggedInUser]);
 
   useEffect(() => {
-    const fetchOnlineUsers = async () => {
-      try {
-        const token = localStorage.getItem("jwtToken");
-        if (!token) {
-          console.error("No token found");
-          return;
-        }
-
-        const response = await manualAxios.get("/action/online");
-
-        const data = response.data;
-
-        let filteredUsers = data.onlineUsers.filter(
-          (user: IUser) => user._id !== loggedInUser?._id || user.online
-        );
-
-        setOnlineUsers(filteredUsers);
-
-        console.log("Online Users:", filteredUsers);
-      } catch (error) {
-        console.error("Error fetching online users:", error);
-      }
-    };
-
-    fetchOnlineUsers();
-
-    socket.on("updateOnlineUsers", (users: IUser[]) => {
-      let filteredUsers = users.filter(
-        (user) => user._id !== loggedInUser?._id || user.online
-      );
-
-      setOnlineUsers(filteredUsers);
-      console.log("Updated Online Users :", filteredUsers);
-    });
-
-    return () => {
-      socket.off("updateOnlineUsers");
-    };
-  }, [loggedInUser]);
-
-  useEffect(() => {
     const fetchUsers = async () => {
       try {
         const response = await manualAxios.get("/action/users");
         const data = response.data;
 
         let filteredUsers = data.users.filter(
-          (user: IUser) => user._id !== loggedInUser?._id
+          (user: IUser) => user._id !== loggedInUser?._id && !user.online
         );
 
         setAllUsers(filteredUsers);
+
         console.log("All Users:", filteredUsers);
+
+        let filteredOnlineusers = data.users.filter(
+          (user: IUser) => user._id !== loggedInUser?._id && user.online
+        );
+        setOnlineUsers(filteredOnlineusers);
       } catch (error) {
         console.error("Error fetching all users:", error);
       }
     };
 
     fetchUsers();
-
-    socket.on("updateAllUsers", (users: IUser[]) => {
-      let filteredUsers = users.filter(
-        (user) => user._id !== loggedInUser?._id
-      );
-
-      setAllUsers(filteredUsers);
-      console.log("Updated All Users:", filteredUsers);
-    });
-
-    return () => {
-      socket.off("updateAllUsers");
-    };
   }, [loggedInUser]);
 
   const handleLogout = async () => {

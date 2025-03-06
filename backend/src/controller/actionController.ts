@@ -34,7 +34,7 @@ export const getMe = async (req: Request, res: Response): Promise<void> => {
 
 export const getUsers = async (req: Request, res: Response): Promise<void> => {
   try {
-    const users = await User.find({}, "name email mobile");
+    const users = await User.find({}, "name email mobile online");
     if (!users) {
       res.status(404).json({ message: "User not found" });
       return;

@@ -204,12 +204,12 @@
   display: flex;
   flex-direction: column;
   gap: 15px;
-  width: 60%; /* Ensure width doesn't change */
-  height: 590px; /* Fixed height */
-  max-height: 590px; /* Prevent increasing size */
-  min-height: 590px; /* Prevent decreasing size */
+  width: 60%;
+  height: 590px;
+  max-height: 590px;
+  min-height: 590px;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
-  overflow-y: auto; /* Allow scrolling */
+  overflow-y: auto;
   padding-right: 10px;
 }
 
@@ -218,7 +218,7 @@
   font-size: 20px;
   font-weight: bold;
   border-bottom: 1px solid #ccc;
-  color: rgb(237, 230, 230);
+  color: rgb(173, 173, 173);
 }
 
 .chat-user {
@@ -241,6 +241,8 @@
 .welcome-user {
   color: white;
   font-size: 20px;
+  overflow-y: hidden;
+  white-space: nowrap;
 }
 /* .online-users::-webkit-scrollbar {
   width: 2px;
