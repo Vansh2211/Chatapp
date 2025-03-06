@@ -1,6 +1,4 @@
 import User from "/Users/juntrax/Desktop/Chatapp/backend/src/models/User";
-import axios from "axios";
-import { profile } from "console";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "/Users/juntrax/Desktop/Chatapp/frontend/src/profile.css";
@@ -61,21 +59,6 @@ const Profile = () => {
     const user = localStorage.getItem("user") || "";
     setUser(JSON.parse(user));
   }, []);
-
-  const handlePHome = () => {
-    console.log("Home clicked");
-    navigate("/home");
-  };
-
-  const handlePLogout = () => {
-    localStorage.removeItem("jwtToken");
-    alert("Logout successful!");
-    navigate("/Login");
-  };
-  const handleRequest = () => {
-    console.log("Request clicked");
-    navigate("/request");
-  };
 
   return (
     <div className="profileDesign">
