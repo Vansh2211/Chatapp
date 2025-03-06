@@ -112,7 +112,11 @@ const ChatBox: React.FC<ChatBoxProps> = ({ selectedUser, loggedInUser }) => {
       .fill(0)
       .map((_, i) => byteCharacters.charCodeAt(i));
     const byteArray = new Uint8Array(byteNumbers);
-    return new Blob([byteArray], { type: contentType });
+    const file = new Blob([byteArray], { type: contentType });
+
+    console.log("file name", file);
+
+    return file;
   };
 
   const clearChat = async () => {
@@ -208,7 +212,7 @@ const ChatBox: React.FC<ChatBoxProps> = ({ selectedUser, loggedInUser }) => {
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  Open PDF 📄
+                  Open {msg.base64String.split(";")[0].split("/")[1]} 📄
                 </a>
               ) : (
                 <p>Unsupported file type</p>

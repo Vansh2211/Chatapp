@@ -57,16 +57,6 @@ const Profile = () => {
     }
   };
 
-  const handlePMenu = () => {
-    console.log("Menu clicked");
-    setIsMenuVisible((prev) => !prev);
-  };
-
-  const handleProfile = () => {
-    console.log("Profile clicked");
-    navigate("/profile");
-  };
-
   useEffect(() => {
     const user = localStorage.getItem("user") || "";
     setUser(JSON.parse(user));
@@ -106,20 +96,6 @@ const Profile = () => {
             <li className="sidebar-item" onClick={() => navigate("/home")}>
               Chat Page
             </li>
-            <li className="sidebar-item" onClick={() => navigate("/profile")}>
-              Profile
-            </li>
-
-            <li
-              className="sidebar-item"
-              onClick={() => {
-                localStorage.removeItem("jwtToken");
-                alert("Logout successful!");
-                navigate("/Login");
-              }}
-            >
-              Logout
-            </li>
           </ul>
         </div>
       )}
@@ -128,7 +104,7 @@ const Profile = () => {
 
       {user && (
         <div className="profileText">
-          <p>
+          <p className="edit-name">
             <b>Name:</b>{" "}
             {isEditing ? (
               <input
@@ -141,7 +117,7 @@ const Profile = () => {
               user.name
             )}
           </p>
-          <p>
+          <p className="edit-email">
             <b>Email:</b>{" "}
             {isEditing ? (
               <input
@@ -154,7 +130,7 @@ const Profile = () => {
               user.email
             )}
           </p>
-          <p>
+          <p className="edit-mobile">
             <b>Mobile:</b>{" "}
             {isEditing ? (
               <input

@@ -266,6 +266,11 @@ const Home: React.FC = () => {
               <p className="welcome-user">Welcome {loggedInUser?.name}!</p>
             </b>
           )}
+
+          {/* <div className="group">
+            <button>Create Group</button>
+          </div> */}
+
           <h3>Online Users:</h3>
           {Array.isArray(onlineUsers) && onlineUsers.length > 0 ? (
             <ul className="user-list">
