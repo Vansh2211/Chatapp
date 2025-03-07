@@ -10,8 +10,14 @@ import {
   updateUser,
 } from "../controller/actionController";
 
+import { createGroup } from "../controller/groupController";
+
 const router = express.Router();
 
+//groups
+router.post("/group", createGroup);
+
+//chats
 router.get("/me", getMe);
 router.get("/users", getUsers);
 router.get("/online", onlineUsers);

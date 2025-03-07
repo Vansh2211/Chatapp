@@ -1,6 +1,5 @@
 import mongoose from "mongoose";
 import express, { Request, Response, NextFunction } from "express";
-// import bcrypt from 'bcrypt';
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import User, { IUser } from "../models/User";

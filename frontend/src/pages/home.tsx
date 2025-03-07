@@ -67,36 +67,6 @@ const Home: React.FC = () => {
     }, []);
   };
 
-  const sendFriendRequest = async (receiverId: string) => {
-    try {
-      const token = localStorage.getItem("jwtToken");
-
-      const response = await fetch("http://localhost:3000/requests/send", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          sender: users?.name,
-          receiver: receiverId,
-          status: "pending",
-        }),
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        setSentRequests([...sentRequests, receiverId]);
-        alert("Friend request sent!");
-      } else {
-        alert(data.message);
-      }
-    } catch (error) {
-      console.error("Error sending friend request:", error);
-    }
-  };
-
   useEffect(() => {
     const user = localStorage.getItem("user") || "";
 
@@ -192,6 +162,12 @@ const Home: React.FC = () => {
     console.log("Profile clicked");
     navigate("/profile");
   };
+
+  // const handleGroup = async () => {
+  //   const response = await manualAxios.post("/action/group");
+
+  //   const data = response.data;
+  // };
 
   return (
     // <div className="inhome-container">
