@@ -64,10 +64,25 @@
 
 /* Welcome Message */
 .welcome-message {
-  font-size: 20px;
-  color: #4f4f4f;
-  margin-bottom: 30px;
-  text-align: center;
+  font-size: 20px; /* Adjust text size */
+  font-weight: bold;
+  color: #fff; /* White text */
+  text-align: center; /* Center the text */
+  margin: 10px auto; /* Add spacing */
+  padding: 8px 15px; /* Padding for spacing */
+  background: linear-gradient(
+    to right,
+    #1e3c72,
+    #2a5298
+  ); /* Gradient background */
+  border-radius: 10px; /* Rounded corners */
+  width: 50%; /* Adjust width to fit content */
+  max-width: 90%; /* Avoid extra wide messages */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px; /* Space between name and text */
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2); /* Subtle shadow effect */
 }
 
 /* Sidebar Styling */
@@ -138,7 +153,17 @@
 }
 
 .main-header {
-  border-bottom: 2px;
+  width: 100%;
+  background-color: #4a4a4a; /* Slightly softer gray */
+  color: white;
+  text-align: center;
+  font-size: 24px;
+  font-weight: bold;
+  padding: 30px 0;
+  padding-top: 30px;
+  border-radius: 8px; /* Smooth corners */
+  margin: 10px auto;
+  max-width: 100%; /* Keeps it from stretching too wide */
 }
 
 .chat-container {
@@ -368,6 +393,10 @@
   color: white;
 }
 
+.cancel-button:hover {
+  background-color: rgb(194, 37, 37);
+}
+
 .logout-button {
   background-color: #130303;
   color: white;
@@ -376,6 +405,7 @@
   padding-right: 35px;
   font-size: 18px;
   margin-left: auto;
+  position: relative;
   /* margin-right: auto; */
   border-radius: 500px;
   width: 2%;
@@ -384,21 +414,30 @@
 }
 
 .logout-button:hover {
-  background-color: #ff3b30;
+  background-color: #000000;
 }
 
 .menu-button {
-  background-color: #0d1217;
+  background-color: #1e3c72; /* Dark blue shade */
   color: white;
   border: none;
-  padding-left: 20px;
-  padding-right: 20px;
-  font-size: 20px;
-  margin-bottom: 0px;
-  border-radius: 500px;
-  width: 20%;
+  padding: 12px 20px;
+  font-size: 16px;
+  margin: 10px auto;
+  border-radius: 8px;
+  width: fit-content;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
-  align-content: left;
+  transition: background-color 0.3s ease-in-out, transform 0.2s;
+  font-weight: 600;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+.menu-button:hover {
+  background-color: #16325c; /* Slightly darker shade on hover */
+  transform: scale(1.05); /* Slight zoom effect */
 }
 
 .messages-box {
@@ -630,19 +669,6 @@
 
 .audio-chat-button:hover {
   background-color: #0056b3;
-}
-
-.menu-button {
-  background-color: #0d1217;
-  color: white;
-  border: none;
-  padding: 10px 25px;
-  font-size: 13px;
-  margin-top: 0px;
-  margin-bottom: 40px;
-  border-radius: 500px;
-  width: 50%;
-  cursor: pointer;
 }
 
 /* Mobile Responsiveness */

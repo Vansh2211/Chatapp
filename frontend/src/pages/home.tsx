@@ -192,8 +192,7 @@ const Home: React.FC = () => {
 
       {loggedInUser && (
         <p className="welcome-message">
-          Hi {loggedInUser?.name}
-          <span className="user-name"></span>, Ready to chat?
+          Welcome {loggedInUser?.name}!<span className="user-name"></span>
         </p>
       )}
 
@@ -227,7 +226,7 @@ const Home: React.FC = () => {
         <div className="online-users">
           {loggedInUser && (
             <b>
-              <p className="welcome-user">Welcome {loggedInUser?.name}!</p>
+              <p className="welcome-user"></p>
             </b>
           )}
 

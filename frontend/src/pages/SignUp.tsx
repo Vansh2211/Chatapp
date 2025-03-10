@@ -22,7 +22,7 @@ const SignUp: React.FC = () => {
 
     localStorage.setItem("name", formData.name);
     localStorage.setItem("email", formData.email);
-    localStorage.setItem("mobile",formData.mobile);
+    localStorage.setItem("mobile", formData.mobile);
 
     // if (formData.password !== formData.confirmPassword) {
     //   alert("Passwords do not match!");
@@ -30,7 +30,7 @@ const SignUp: React.FC = () => {
     // }
 
     try {
-      const response = await fetch("http://192.168.1.165:3000/auth/SignUp", {
+      const response = await fetch("http://192.168.1.177:3000/auth/SignUp", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -62,18 +62,24 @@ const SignUp: React.FC = () => {
           </h1>
           {/* <img alt="V-ChatApp" src="/mylogo.jpeg" className="mx-2 h-2 w-2" /> */}
           <p className="leading-relaxed mt-4">
-            <b>This is a simple chat application for chatting with friends and family.</b>
+            <b>
+              This is a simple chat application for chatting with friends and
+              family.
+            </b>
           </p>
         </div>
 
         {/* Right Section (Sign-Up Form) */}
         <div className="lg:w-2/6 md:w-1/2 bg-gray-100 rounded-lg p-8 flex flex-col md:ml-auto w-full mt-10 md:mt-0">
-          <h2 className="text-gray-900 text-lg font-medium title-font mb-5">Sign Up</h2>
+          <h2 className="text-gray-900 text-lg font-medium title-font mb-5">
+            Sign Up
+          </h2>
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
-              <label htmlFor="fullName" className="block text-sm font-medium text-gray-900">
-                
-              </label>
+              <label
+                htmlFor="fullName"
+                className="block text-sm font-medium text-gray-900"
+              ></label>
               <div className="mt-2">
                 <input
                   id="name"
@@ -90,9 +96,10 @@ const SignUp: React.FC = () => {
             </div>
 
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-900">
-                
-              </label>
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-gray-900"
+              ></label>
               <div className="mt-2">
                 <input
                   id="email"
@@ -109,9 +116,10 @@ const SignUp: React.FC = () => {
             </div>
 
             <div>
-              <label htmlFor="mobile" className="block text-sm font-medium text-gray-900">
-                
-              </label>
+              <label
+                htmlFor="mobile"
+                className="block text-sm font-medium text-gray-900"
+              ></label>
               <div className="mt-2">
                 <input
                   id="mobile"
@@ -127,9 +135,10 @@ const SignUp: React.FC = () => {
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-900">
-                
-              </label>
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium text-gray-900"
+              ></label>
               <div className="mt-2">
                 <input
                   id="password"
@@ -147,10 +156,7 @@ const SignUp: React.FC = () => {
               <div className="g-signin2" data-onsuccess="onSignIn"></div>
             </div>
 
-
             <div>
-
-            
               <button
                 type="submit"
                 className="flex w-full justify-center rounded-md bg-indigo-500 px-2 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-600 focus-visible:outline-2 focus-visible:outline-indigo-600"
@@ -159,7 +165,10 @@ const SignUp: React.FC = () => {
               </button>
               <p className="mt-10 text-center text-sm text-blue-500">
                 Already a user?{" "}
-                <a href="./Login" className="font-semibold text-indigo-600 hover:text-blue-500">
+                <a
+                  href="./Login"
+                  className="font-semibold text-indigo-600 hover:text-blue-500"
+                >
                   Login
                 </a>
               </p>

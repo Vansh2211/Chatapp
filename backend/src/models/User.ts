@@ -7,7 +7,7 @@ export interface IUser extends Document {
   password: string;
   mobile: number;
   online: boolean;
-  groupId: mongoose.Schema.Types.ObjectId[];
+  // groupId: mongoose.Schema.Types.ObjectId[];
 }
 
 const userSchema = new Schema<IUser>({
@@ -16,7 +16,7 @@ const userSchema = new Schema<IUser>({
   password: { type: String, required: true },
   mobile: { type: Number, required: true },
   online: { type: Boolean, default: false },
-  groupId: [{ type: mongoose.Schema.Types.ObjectId, ref: "Group" }],
+  // groupId: [{ type: mongoose.Schema.Types.ObjectId, ref: "Group" }],
 });
 
 const User = model<IUser>("User ", userSchema);
